@@ -1,0 +1,190 @@
+import { Map } from './map.js'
+import { Building, BuildingType } from './building.js'
+import { Unit, UnitType } from './unit.js'
+
+class Gameplay {
+    constructor(params) {
+        this.map = new Map(params.mapWidth, params.mapHeight);
+
+        this.buildings = [];
+        this.units = [];
+
+        this.selectionStartX = 0;
+        this.selectionStartY = 0;
+        this.selectionEndX = 0;
+        this.selectionEndY = 0;
+    }
+
+    initMap() {
+        for(let i = 1; i < 8; i++) {
+            for(let j = 1; j < 8; j++) {
+                let unit = new Unit(UnitType.worker, i, j);
+
+                this.units.push(unit);
+
+                this.map.addUnit(unit);
+            }
+        }
+    }
+
+    exec (deltaTime) {
+        this.units.forEach(unit => {
+            unit.move(deltaTime, this.map);
+        });
+    }
+
+    render(ctx, selecting) {
+        this.map.render(ctx);
+
+        if(selecting) {
+            this.drawSelectionRect(ctx);
+        }
+    }
+
+    drawSelectionRect(ctx) {
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 2;
+
+        let sx, sy, sw, sh;
+
+        if(this.selectionStartX < this.selectionEndX){
+            sx = this.selectionStartX - this.map.screenPosX;
+            sw = this.selectionEndX - this.selectionStartX;
+        }
+        else {
+            sx = this.selectionEndX - this.map.screenPosX;
+            sw = this.selectionStartX - this.selectionEndX;
+        }
+
+        if(this.selectionStartY < this.selectionEndY) {
+            sy = this.selectionStartY - this.map.screenPosY;
+            sh = this.selectionEndY - this.selectionStartY;
+        }
+        else {
+            sy = this.selectionEndY - this.map.screenPosY;
+            sh = this.selectionStartY - this.selectionEndY;
+        }
+
+        ctx.rect(sx, sy, sw, sh);
+        ctx.stroke();
+    }
+
+    moveMap(arrows) {
+        this.map.moveMap(arrows);
+    }
+
+    onClick(x, y) {
+        this.map.checkTile(x, y);
+    }
+
+    beginSelection(x, y) {
+        this.selectionStartX = x + this.map.screenPosX;
+        this.selectionStartY = y + this.map.screenPosY;
+    }
+
+    updateSelection(x, y)  {
+        this.selectionEndX = x + this.map.screenPosX;
+        this.selectionEndY = y + this.map.screenPosY;
+
+        this.selectUnits();
+    }
+
+    endSelection() {
+
+    }
+
+    selectUnits() {
+        let sx, sy, ex, ey;
+
+        if(this.selectionStartX < this.selectionEndY) {
+            sx = this.map.getTileX_map(this.selectionStartX, this.selectionStartY);
+            ex = this.map.getTileX_map(this.selectionEndX, this.selectionEndY);
+        }
+        else {
+            sx = this.map.getTileX_map(this.selectionEndX, this.selectionEndY);
+            ex = this.map.getTileX_map(this.selectionStartX, this.selectionStartY);
+        }
+
+        if(this.selectionStartX < this.selectionEndY) {
+            sy = this.map.getTileY_map(this.selectionStartX, this.selectionStartY);
+            ey = this.map.getTileY_map(this.selectionEndX, this.selectionEndY);
+        }
+        else {
+            sy = this.map.getTileY_map(this.selectionEndX, this.selectionEndY);
+            ey = this.map.getTileY_map(this.selectionStartX, this.selectionStartY);
+        }
+
+        this.units.forEach(unit => {
+            if(isPointInSelection(sx, sy, ex, ey, unit.posX, unit.posY)) {
+                unit.selected = true;
+            }
+            else {
+                unit.selected = false;
+            }
+        });
+    }
+
+    moveUnitsTo(screenX, screenY) {
+        const x = this.map.getTileX(screenX, screenY);
+        const y = this.map.getTileY(screenX, screenY);
+
+        this.units.forEach(unit => {
+            if(unit.selected) {
+                const path = this.map.getPath(unit.posX, unit.posY, x, y);
+                unit.setPath(path);
+            }
+        });
+    }
+
+    build(typeName) {
+        if(typeName == "house") {
+            const posX = this.map.checkedTileX;
+            const posY = this.map.checkedTileY;
+
+            let building = new Building(BuildingType.house, posX, posY);
+
+            this.buildings.push(building);
+
+            this.map.addBuilding(building);
+        }
+    }
+
+    addUnit(typeName) {
+        if(typeName == "worker") {
+            const posX = this.map.checkedTileX;
+            const posY = this.map.checkedTileY;
+
+            let unit = new Unit(UnitType.worker, posX, posY);
+
+            this.units.push(unit);
+
+            this.map.addUnit(unit);
+        }
+    }
+}
+
+function isPointInSelection(sx, sy, ex, ey, x, y) {
+    const sqrt2 = Math.sqrt(2);
+
+    // Rotate the rectangle vertices
+    const x1Prime = (sx + sy) / sqrt2;
+    const y1Prime = (-sx + sy) / sqrt2;
+
+    const x2Prime = (ex + ey) / sqrt2;
+    const y2Prime = (-ex + ey) / sqrt2;
+
+    // Rotate the point
+    const xPrime = (x + y) / sqrt2;
+    const yPrime = (-x + y) / sqrt2;
+
+    // Determine the bounding box
+    const xMin = Math.min(x1Prime, x2Prime);
+    const xMax = Math.max(x1Prime, x2Prime);
+    const yMin = Math.min(y1Prime, y2Prime);
+    const yMax = Math.max(y1Prime, y2Prime);
+
+    // Check if the point lies within the bounds
+    return (xPrime >= xMin && xPrime <= xMax && yPrime >= yMin && yPrime <= yMax);
+}
+
+export { Gameplay }
