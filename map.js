@@ -11,8 +11,8 @@ class Map {
         this.screenPosX = 0;
         this.screenPosY = 0;
 
-        this.TILE_WIDTH = 256;
-        this.TILE_HEIGHT = 128;
+        this.TILE_WIDTH = 128;
+        this.TILE_HEIGHT = 64;
 
         this.MOVE_SPEED = 3;
 
@@ -78,6 +78,16 @@ class Map {
                 if(this.tiles[i][j].type == TileType.GRASS) {
                     ctx.drawImage(this.grassImage, screenX, screenY);
                 }
+                else if(this.tiles[i][j].type == TileType.TREE) {
+                    ctx.drawImage(this.grassImage, screenX, screenY);
+
+                    if(this.tiles[i][j].treeSort == 1)
+                        ctx.drawImage(this.tree1Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+                    else if(this.tiles[i][j].treeSort == 2)
+                        ctx.drawImage(this.tree2Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+                    else if(this.tiles[i][j].treeSort == 3)
+                        ctx.drawImage(this.tree3Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+                }
 
                 if(this.tiles[i][j].building != null) {
                     if(this.tiles[i][j].building.type == BuildingType.house) {
@@ -121,7 +131,7 @@ class Map {
                 this.tiles[i][j].units.forEach(unit => {
                     if(unit.selected) {
                         ctx.beginPath();
-                        ctx.arc(screenX, screenY, 40, 0, 2 * Math.PI);
+                        ctx.arc(screenX, screenY, 15, 0, 2 * Math.PI);
                         ctx.stroke();
                     }
                 });
@@ -183,6 +193,12 @@ class Map {
         const j = unit.posY;
 
         this.tiles[i][j].units.push(unit);
+    }
+
+    placeTree(x, y)
+    {
+        this.tiles[x][y].type = TileType.TREE;
+        this.tiles[x][y].treeSort = Math.round(1 + Math.random() * 2);
     }
 
     moveUnitToTile(unit, x, y)

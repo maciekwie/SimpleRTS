@@ -24,8 +24,8 @@ function main() {
     const ctx = canvas.getContext("2d");
 
     gameplay = new Gameplay({
-        mapWidth: 12,
-        mapHeight: 12
+        mapWidth: 64,
+        mapHeight: 64
     });
 
     const grassImage = document.getElementById("grassImage");
@@ -34,6 +34,13 @@ function main() {
     gameplay.map.houseImage = houseImage;
     const workerImage = document.getElementById("workerImage");
     gameplay.map.workerImage = workerImage;
+    const tree1Image = document.getElementById("tree1Image");
+    gameplay.map.tree1Image = tree1Image;
+    const tree2Image = document.getElementById("tree2Image");
+    gameplay.map.tree2Image = tree2Image;
+    const tree3Image = document.getElementById("tree3Image");
+    gameplay.map.tree3Image = tree3Image;
+
     setEventListeners();
 
     let then = 0;

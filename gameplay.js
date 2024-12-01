@@ -16,14 +16,22 @@ class Gameplay {
     }
 
     initMap() {
-        for(let i = 1; i < 8; i++) {
-            for(let j = 1; j < 8; j++) {
+        for(let i = 1; i < 2; i++) {
+            for(let j = 1; j < 2; j++) {
                 let unit = new Unit(UnitType.worker, i, j);
 
                 this.units.push(unit);
 
                 this.map.addUnit(unit);
             }
+        }
+
+        for(let i = 0; i < 100; i++)
+        {
+            const x = Math.round(Math.random() * (this.map.width - 1));
+            const y = Math.round(Math.random() * (this.map.height - 1));
+
+            this.map.placeTree(x, y);
         }
     }
 

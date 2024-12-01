@@ -1,7 +1,8 @@
 
 const TileType = {
     GRASS: Symbol("grass"),
-    WATER: Symbol("water")
+    WATER: Symbol("water"),
+    TREE: Symbol("tree")
 };
 Object.freeze(TileType);
 
