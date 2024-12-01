@@ -194,41 +194,61 @@ class Map {
         unit.posY = y;
     }
 
-    getPath(sx, sy, ex, ey)
+    getPath(startRow, startCol, endRow, endCol)
     {
-        function NodeRecord() {
-            this.node = null;
-            this.connection = null;
-            this.costSoFar = 0;
+        const numRows = this.tiles.length;
+        const numCols = this.tiles[0].length;
+
+        // Initialize distance, previous, and visited matrices
+        const distances = [];
+        const previous = [];
+        const visited = [];
+
+        for (let i = 0; i < numRows; i++) {
+            distances[i] = [];
+            previous[i] = [];
+            visited[i] = [];
+            for (let j = 0; j < numCols; j++) {
+                distances[i][j] = Infinity;
+                previous[i][j] = null;
+                visited[i][j] = false;
+            }
         }
 
-        let startRecord = new NodeRecord();
-        startRecord.node = [sx, sy];
+        distances[startRow][startCol] = 0;
 
-        let open = [];
-        open.push(startRecord);
-        let closed = [];
+        const queue = [];
+        queue.push({ position: [startRow, startCol], distance: 0 });
 
-        let current;
+        while(queue.length > 0) {
+            // Sort the queue based on distance
+            queue.sort((a, b) => a.distance - b.distance);
 
-        while(open.length > 0) {
-            // Find the smallest element in the open list.
-            /*current = open.reduce((accumulator, currentValue) => {
-                currentValue.costSoFar < accumulator.costSoFar ? currentValue : accumulator;
-            });*/
-            current = open[0];
-            for(let index = 0; index < open.length; index++) {
-                if(open[index].costSoFar < current.costSoFar) {
-                    current = open[index];
+            // Dequeue the node with the smallest distance
+            const current = queue.shift();
+            const [row, col] = current.position;
+
+            if (visited[row][col]) {
+                continue;
+              }
+            visited[row][col] = true;
+
+            // If we've reached the end node, reconstruct the path
+            if (row === endRow && col === endCol) {
+                const path = [];
+                let currPos = [row, col];
+
+                while (currPos) {
+                    path.push(currPos);
+                    currPos = previous[currPos[0]][currPos[1]];
                 }
+                path.reverse();
+
+                return path;
             }
 
-            // If it is the goal, then terminate.
-            if(current.node[0] == ex && current.node[1] == ey)
-                break;
-
-            const i = current.node[0];
-            const j = current.node[1];
+            const i = row;
+            const j = col;
             let connections = [];
 
             if(i >= 1)
@@ -262,64 +282,28 @@ class Map {
                 }
             }
 
-            connections.forEach((connection) => {
-                const endNodeCost = current.costSoFar + connection.cost;
-                let endNodeRecord = null;
-
-                if(closed.find((element) => {
-                    element.node[0] == connection.x && element.node[1] == connection.y;
-                })) {
-                    return;
+            for (const connection of connections) {
+                const nRow = connection.x;
+                const nCol = connection.y;
+                const tile = this.tiles[nRow][nCol];
+          
+                // Skip if the tile is occupied or impassable
+                if (tile.occupied) {
+                  continue;
                 }
-                else if(open.find((element) => {
-                    element.node[0] == connection.x && element.node[1] == connection.y;
-                })) {
-                    if(element.costSoFar <= endNodeCost) {
-                        return;
-                    }
-
-                    endNodeRecord = element;
+          
+                const altDistance = distances[row][col] + connection.cost;
+          
+                if (altDistance < distances[nRow][nCol]) {
+                    distances[nRow][nCol] = altDistance;
+                    previous[nRow][nCol] = [row, col];
+                    queue.push({ position: [nRow, nCol], distance: altDistance });
                 }
-                else {
-                    endNodeRecord = new NodeRecord();
-                    endNodeRecord.node = [connection.x, connection.y]
-                }
-
-                endNodeRecord.costSoFar = endNodeCost;
-                endNodeRecord.connection = current;
-
-                if(!open.find((element) => {
-                    element.node == endNodeRecord.node;
-                })) {
-                    open.push(endNodeRecord);
-                }
-            });
-
-            const removeIndex = open.find((element => {
-                element.node == current.node;
-            }));
-            open.splice(removeIndex, 1);
-            closed.push(current);
-        }
-
-        if(current.node[0] != ex || current.node[1] != ey) {
-            console.log("null path");
-            return null;
-        }
-        else {
-            let path = [];
-
-            while(current.node[0] != sx || current.node[1] != sy) {
-                path.push(current.connection.node);
-
-                current = current.connection;
             }
-
-            path.reverse();
-            path.push([ex, ey]);
-
-            return path;
         }
+
+        // Return null if no path is found
+        return null;
     }
 }
 
