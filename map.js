@@ -93,15 +93,16 @@ class Map {
                         const dx = unit.getDirectionX();
                         const dy = unit.getDirectionY();
 
-                        x += unit.moveProgress * dx * this.TILE_WIDTH / 4 - unit.moveProgress * dy * this.TILE_HEIGHT / 4;
-                        y += unit.moveProgress * dy * this.TILE_HEIGHT / 4 + unit.moveProgress * dx * this.TILE_WIDTH / 4;
+                        x += -unit.moveProgress * dx * this.TILE_WIDTH / 4 + unit.moveProgress * dy * this.TILE_WIDTH / 4;
+                        y += unit.moveProgress * dx * this.TILE_HEIGHT / 4 + unit.moveProgress * dy * this.TILE_HEIGHT / 4;
                     }
                     else if(unit.moveState == MoveState.MOVE_IN) {
                         const dx = -unit.getDirectionX();
                         const dy = -unit.getDirectionY();
-
-                        x += unit.moveProgress * dx * this.TILE_WIDTH / 4 - unit.moveProgress * dy * this.TILE_HEIGHT / 4;
-                        y += unit.moveProgress * dy * this.TILE_HEIGHT / 4 + unit.moveProgress * dx * this.TILE_WIDTH / 4;
+                        
+                        x += -(1 - unit.moveProgress) * dx * this.TILE_WIDTH / 4 + (1 - unit.moveProgress)  * dy * this.TILE_WIDTH / 4;
+                        y += (1 - unit.moveProgress) * dx * this.TILE_HEIGHT / 4 + (1 - unit.moveProgress) * dy * this.TILE_HEIGHT / 4;
+ 
                     }
 
                     ctx.drawImage(this.workerImage, x, y);

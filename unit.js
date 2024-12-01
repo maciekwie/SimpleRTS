@@ -27,6 +27,9 @@ class Unit extends GameObject{
         this.path = [];
         this.moveState = MoveState.STAY;
         this.moveProgress = 0;
+        this.directionX = 0;
+        this.directionY = 0;
+        this.diagonalDirection = false;
     }
 
     setPath(path) {
@@ -43,9 +46,26 @@ class Unit extends GameObject{
         if(this.moveState == MoveState.STAY)
         {
             this.moveState = MoveState.MOVE_OUT;
+
+            this.path.splice(0, 1);
+
+            if(this.path.length == 0) {
+                this.moveState = MoveState.STAY;
+                return;
+            }
+            this.directionX = this.path[0][0] - this.posX;
+            this.directionY = this.path[0][1] - this.posY;
+
+            if(this.directionX + this.directionY == 1 || this.directionX + this.directionY == -1)
+                this.diagonalDirection = false;
+            else
+                this.diagonalDirection = true;
         }
         else if(this.moveState == MoveState.MOVE_OUT) {
-            this.moveProgress += this.type.speed * deltaTime;
+            if(this.diagonalDirection)
+                this.moveProgress += this.type.speed * deltaTime * (1 / Math.sqrt(2));
+            else
+                this.moveProgress += this.type.speed * deltaTime;
 
             if(this.moveProgress >= 1) {
                 this.moveProgress = 0;
@@ -55,28 +75,24 @@ class Unit extends GameObject{
             }
         }
         else if(this.moveState == MoveState.MOVE_IN) {
-            this.moveProgress += this.type.speed * deltaTime;
+            if(this.diagonalDirection)
+                this.moveProgress += this.type.speed * deltaTime * (1 / Math.sqrt(2));
+            else
+                this.moveProgress += this.type.speed * deltaTime;
 
             if(this.moveProgress >= 1) {
                 this.moveProgress = 0;
                 this.moveState = MoveState.STAY;
-                this.path.splice(0, 1);
             }
         }
     }
 
     getDirectionX() {
-        if(this.path.length == 0)
-            return 0;
-
-        return this.path[0][0] - this.posX; 
+        return this.directionY; 
     }
 
     getDirectionY() {
-        if(this.path.length == 0)
-            return 0;
-
-        return this.path[0][1] - this.posY; 
+        return this.directionX; 
     }
 }
 
