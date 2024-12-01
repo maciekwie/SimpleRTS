@@ -40,6 +40,8 @@ function main() {
     gameplay.map.tree2Image = tree2Image;
     const tree3Image = document.getElementById("tree3Image");
     gameplay.map.tree3Image = tree3Image;
+    const stoneImage = document.getElementById("stoneImage");
+    gameplay.map.stoneImage = stoneImage;
 
     setEventListeners();
 

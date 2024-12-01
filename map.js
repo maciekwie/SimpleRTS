@@ -76,10 +76,13 @@ class Map {
                 const screenY = this.getScreenY(i, j);
     
                 if(this.tiles[i][j].type == TileType.GRASS) {
-                    ctx.drawImage(this.grassImage, screenX, screenY);
+                    ctx.drawImage(this.grassImage, screenX - this.TILE_WIDTH, screenY);
+                }
+                else if(this.tiles[i][j].type == TileType.STONE) {
+                    ctx.drawImage(this.stoneImage, screenX - this.TILE_WIDTH, screenY);
                 }
                 else if(this.tiles[i][j].type == TileType.TREE) {
-                    ctx.drawImage(this.grassImage, screenX, screenY);
+                    ctx.drawImage(this.grassImage, screenX - this.TILE_WIDTH, screenY);
 
                     if(this.tiles[i][j].treeSort == 1)
                         ctx.drawImage(this.tree1Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
@@ -199,6 +202,11 @@ class Map {
     {
         this.tiles[x][y].type = TileType.TREE;
         this.tiles[x][y].treeSort = Math.round(1 + Math.random() * 2);
+    }
+
+    placeStone(x, y)
+    {
+        this.tiles[x][y].type = TileType.STONE;
     }
 
     moveUnitToTile(unit, x, y)

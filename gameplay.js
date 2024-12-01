@@ -26,13 +26,20 @@ class Gameplay {
             }
         }
 
-        for(let i = 0; i < 100; i++)
+        for(let i = 0; i < 200; i++)
         {
             const x = Math.round(Math.random() * (this.map.width - 1));
             const y = Math.round(Math.random() * (this.map.height - 1));
 
             this.map.placeTree(x, y);
         }
+        for(let i = 0; i < 150; i++)
+            {
+                const x = Math.round(Math.random() * (this.map.width - 1));
+                const y = Math.round(Math.random() * (this.map.height - 1));
+    
+                this.map.placeStone(x, y);
+            }
     }
 
     exec (deltaTime) {
