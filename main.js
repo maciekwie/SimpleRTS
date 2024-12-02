@@ -1,4 +1,5 @@
 import { Gameplay } from './gameplay.js'
+import { AssetManager } from './asset-manager.js';
 
 const SCREEN_WIDTH = 800;
 const SCREEN_HEIGHT = 600;
@@ -19,6 +20,9 @@ let gameplay;
 main();
 
 function main() {
+    AssetManager.loadAssets();
+
+
     const canvas = document.querySelector("#canvasId");
 
     const ctx = canvas.getContext("2d");
@@ -28,24 +32,10 @@ function main() {
         mapHeight: 64
     });
 
-    const grassImage = document.getElementById("grassImage");
-    gameplay.map.grassImage = grassImage;
-    const houseImage = document.getElementById("houseImage");
-    gameplay.map.houseImage = houseImage;
-    const workerImage = document.getElementById("workerImage");
-    gameplay.map.workerImage = workerImage;
-    const tree1Image = document.getElementById("tree1Image");
-    gameplay.map.tree1Image = tree1Image;
-    const tree2Image = document.getElementById("tree2Image");
-    gameplay.map.tree2Image = tree2Image;
-    const tree3Image = document.getElementById("tree3Image");
-    gameplay.map.tree3Image = tree3Image;
-    const stoneImage = document.getElementById("stoneImage");
-    gameplay.map.stoneImage = stoneImage;
-
     setEventListeners();
 
     let then = 0;
+    let lastFrame = 0;
 
     gameplay.initMap();
 
@@ -57,9 +47,15 @@ function main() {
         ctx.fill = "black";
         ctx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+        if(now - lastFrame > 1/30) {
+            lastFrame = now;
+            gameplay.nextFrame();
+        }
+
         gameplay.exec(deltaTime);
         gameplay.moveMap(arrows);
         gameplay.render(ctx, selecting);
+
 
         requestAnimationFrame(render);
     }
@@ -101,6 +97,9 @@ function setEventListeners() {
         }
         else if (keyName == "b") {
             gameplay.build("house");
+        }
+        else if (keyName == "m") {
+            gameplay.build("mill");
         }
         else if (keyName == "u") {
             gameplay.addUnit("worker");

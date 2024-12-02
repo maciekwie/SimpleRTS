@@ -1,6 +1,7 @@
 import { Map } from './map.js'
 import { Building, BuildingType } from './building.js'
 import { Unit, UnitType } from './unit.js'
+import { AssetManager } from './asset-manager.js';
 
 class Gameplay {
     constructor(params) {
@@ -54,6 +55,12 @@ class Gameplay {
         if(selecting) {
             this.drawSelectionRect(ctx);
         }
+    }
+
+    nextFrame() {
+        this.buildings.forEach(building => {
+            building.nextFrame();
+        })
     }
 
     drawSelectionRect(ctx) {
@@ -152,14 +159,21 @@ class Gameplay {
     }
 
     build(typeName) {
+        const posX = this.map.checkedTileX;
+        const posY = this.map.checkedTileY;
+        
         if(typeName == "house") {
-            const posX = this.map.checkedTileX;
-            const posY = this.map.checkedTileY;
-
-            let building = new Building(BuildingType.house, posX, posY);
+            let building = new Building(BuildingType.houseType, posX, posY);
 
             this.buildings.push(building);
+            this.map.addBuilding(building);
+        }
+        else if(typeName == "mill") {
+            let building = new Building(BuildingType.millType, posX, posY);
 
+            building.currentAnimation = AssetManager.millAnimations["mill"];
+
+            this.buildings.push(building);
             this.map.addBuilding(building);
         }
     }

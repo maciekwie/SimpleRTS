@@ -1,7 +1,7 @@
 import { BuildingType } from './building.js';
 import { Tile, TileType } from './tile.js'
 import { MoveState } from './unit.js'
-
+import { AssetManager } from './asset-manager.js';
 
 class Map {
     constructor(width, height) {
@@ -76,31 +76,38 @@ class Map {
                 const screenY = this.getScreenY(i, j);
     
                 if(this.tiles[i][j].type == TileType.GRASS) {
-                    ctx.drawImage(this.grassImage, screenX - this.TILE_WIDTH, screenY);
+                    ctx.drawImage(AssetManager.grassImage, screenX - this.TILE_WIDTH, screenY);
                 }
                 else if(this.tiles[i][j].type == TileType.STONE) {
-                    ctx.drawImage(this.stoneImage, screenX - this.TILE_WIDTH, screenY);
+                    ctx.drawImage(AssetManager.stoneImage, screenX - this.TILE_WIDTH, screenY);
                 }
                 else if(this.tiles[i][j].type == TileType.TREE) {
-                    ctx.drawImage(this.grassImage, screenX - this.TILE_WIDTH, screenY);
+                    ctx.drawImage(AssetManager.grassImage, screenX - this.TILE_WIDTH, screenY);
 
                     if(this.tiles[i][j].treeSort == 1)
-                        ctx.drawImage(this.tree1Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+                        ctx.drawImage(AssetManager.tree1Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
                     else if(this.tiles[i][j].treeSort == 2)
-                        ctx.drawImage(this.tree2Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+                        ctx.drawImage(AssetManager.tree2Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
                     else if(this.tiles[i][j].treeSort == 3)
-                        ctx.drawImage(this.tree3Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+                        ctx.drawImage(AssetManager.tree3Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
                 }
 
                 if(this.tiles[i][j].building != null) {
-                    if(this.tiles[i][j].building.type == BuildingType.house) {
-                        ctx.drawImage(this.houseImage, screenX - this.houseImage.width / 2, screenY - this.houseImage.height / 2 - this.TILE_HEIGHT / 2);
+                    if(this.tiles[i][j].building.type === BuildingType.houseType) {
+                        ctx.drawImage(AssetManager.houseImage, screenX - AssetManager.houseImage.width / 2, screenY - AssetManager.houseImage.height / 2 - this.TILE_HEIGHT / 2);
+                    }
+                    else if(this.tiles[i][j].building.type === BuildingType.millType) {
+                        let frame = this.tiles[i][j].building.currentAnimation.frames[this.tiles[i][j].building.currentFrame];
+
+                        ctx.drawImage(AssetManager.millImage, frame.x, frame.y, frame.width, frame.height, 
+                            screenX - frame.width / 2, screenY - frame.height / 2 - this.TILE_HEIGHT * 1.5, 
+                            frame.width, frame.height);
                     }
                 }
 
                 this.tiles[i][j].units.forEach(unit => {
-                    let x = screenX - this.workerImage.width / 2;
-                    let y = screenY - this.workerImage.height / 2 - this.TILE_HEIGHT / 2;
+                    let x = screenX - AssetManager.workerImage.width / 2;
+                    let y = screenY - AssetManager.workerImage.height / 2 - this.TILE_HEIGHT / 2;
 
                     if(unit.moveState == MoveState.MOVE_OUT) {
                         const dx = unit.getDirectionX();
@@ -118,7 +125,7 @@ class Map {
  
                     }
 
-                    ctx.drawImage(this.workerImage, x, y);
+                    ctx.drawImage(AssetManager.workerImage, x, y);
                 });
             }
         }
