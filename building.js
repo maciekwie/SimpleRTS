@@ -8,6 +8,8 @@ class BuildingType  {
 
 BuildingType.houseType = new BuildingType("house");
 BuildingType.millType = new BuildingType("mill");
+BuildingType.storehouseType = new BuildingType("storehouse");
+BuildingType.barracksType = new BuildingType("barracks");
 
 class Building extends GameObject {
     constructor(type, posX, posY) {
@@ -21,6 +23,9 @@ class Building extends GameObject {
 
     nextFrame()
     {
+        if(this.currentAnimation == null)
+            return;
+
         this.currentFrame++;
 
         if(this.currentFrame == this.currentAnimation.numberOfFrames)

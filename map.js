@@ -103,6 +103,12 @@ class Map {
                             screenX - frame.width / 2, screenY - frame.height / 2 - this.TILE_HEIGHT * 1.5, 
                             frame.width, frame.height);
                     }
+                    else if(this.tiles[i][j].building.type === BuildingType.storehouseType) {
+                        ctx.drawImage(AssetManager.storehouseImage, screenX - AssetManager.storehouseImage.width / 2 + this.TILE_WIDTH / 2, screenY - AssetManager.storehouseImage.height / 2 - this.TILE_HEIGHT - 25);
+                    }
+                    else if(this.tiles[i][j].building.type === BuildingType.barracksType) {
+                        ctx.drawImage(AssetManager.barracksImage, screenX - AssetManager.barracksImage.width / 2 - 20 + this.TILE_WIDTH, screenY - AssetManager.barracksImage.height + this.TILE_HEIGHT * 2 - 15);
+                    }
                 }
 
                 this.tiles[i][j].units.forEach(unit => {

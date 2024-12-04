@@ -176,6 +176,18 @@ class Gameplay {
             this.buildings.push(building);
             this.map.addBuilding(building);
         }
+        else if(typeName == "barracks") {
+            let building = new Building(BuildingType.barracksType, posX, posY);
+
+            this.buildings.push(building);
+            this.map.addBuilding(building);
+        }
+        else if(typeName == "storehouse") {
+            let building = new Building(BuildingType.storehouseType, posX, posY);
+
+            this.buildings.push(building);
+            this.map.addBuilding(building);
+        }
     }
 
     addUnit(typeName) {

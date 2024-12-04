@@ -95,8 +95,14 @@ function setEventListeners() {
         else if (keyName == "ArrowRight") {
             arrows.right = false;
         }
-        else if (keyName == "b") {
+        else if (keyName == "h") {
             gameplay.build("house");
+        }
+        else if (keyName == "b") {
+            gameplay.build("barracks");
+        }
+        else if (keyName == "s") {
+            gameplay.build("storehouse");
         }
         else if (keyName == "m") {
             gameplay.build("mill");
