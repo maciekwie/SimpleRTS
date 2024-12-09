@@ -22,7 +22,6 @@ main();
 function main() {
     AssetManager.loadAssets();
 
-
     const canvas = document.querySelector("#canvasId");
 
     const ctx = canvas.getContext("2d");

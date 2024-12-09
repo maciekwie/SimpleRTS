@@ -93,21 +93,61 @@ class Map {
                 }
 
                 if(this.tiles[i][j].building != null) {
-                    if(this.tiles[i][j].building.type === BuildingType.houseType) {
-                        ctx.drawImage(AssetManager.houseImage, screenX - AssetManager.houseImage.width / 2, screenY - AssetManager.houseImage.height / 2 - this.TILE_HEIGHT / 2);
-                    }
-                    else if(this.tiles[i][j].building.type === BuildingType.millType) {
-                        let frame = this.tiles[i][j].building.currentAnimation.frames[this.tiles[i][j].building.currentFrame];
+                    const buildingPartX = i - this.tiles[i][j].building.posX + 1;
+                    const buildingPartY = j - this.tiles[i][j].building.posY + 1;
+                    const type = this.tiles[i][j].building.type;
 
-                        ctx.drawImage(AssetManager.millImage, frame.x, frame.y, frame.width, frame.height, 
-                            screenX - frame.width / 2, screenY - frame.height / 2 - this.TILE_HEIGHT * 1.5, 
-                            frame.width, frame.height);
+                    if(this.tiles[i][j].building.type === BuildingType.millType) {
+                        let frame = this.tiles[i][j].building.currentAnimation.frames[this.tiles[i][j].building.currentFrame];
+                        
+                        let frontSlice = type.height - buildingPartY;
+                        let sideSlice = type.width - buildingPartX;
+    
+                        if(buildingPartX == type.width)
+                        {
+                            const sx = frame.x + frontSlice * (this.TILE_WIDTH / 2) + this.TILE_WIDTH / 2 + (type.width - 1) * (this.TILE_WIDTH / 2);
+                            const sy = frame.y;
+                            const sw = this.TILE_WIDTH / 2;
+                            const sh = frame.height;
+                            const dx = screenX;
+                            const dy = screenY - frame.height + frontSlice * (this.TILE_HEIGHT / 2) + this.TILE_HEIGHT / 2;;
+                            ctx.drawImage(type.image, sx, sy, sw, sh, dx, dy, this.TILE_WIDTH / 2, frame.height);
+                        }
+                        if(buildingPartY == type.height)
+                        {
+                            const sx = frame.x + (type.width - 1) * (this.TILE_WIDTH / 2)- sideSlice * (this.TILE_WIDTH / 2);
+                            const sy = frame.y;
+                            const sw = this.TILE_WIDTH / 2;
+                            const sh = frame.height;
+                            const dx = screenX - this.TILE_WIDTH / 2;
+                            const dy = screenY - frame.height + sideSlice * (this.TILE_HEIGHT / 2) + this.TILE_HEIGHT / 2;
+                            ctx.drawImage(type.image, sx, sy, sw, sh, dx, dy, this.TILE_WIDTH / 2, frame.height);
+                        }
                     }
-                    else if(this.tiles[i][j].building.type === BuildingType.storehouseType) {
-                        ctx.drawImage(AssetManager.storehouseImage, screenX - AssetManager.storehouseImage.width / 2 + this.TILE_WIDTH / 2, screenY - AssetManager.storehouseImage.height / 2 - this.TILE_HEIGHT - 25);
-                    }
-                    else if(this.tiles[i][j].building.type === BuildingType.barracksType) {
-                        ctx.drawImage(AssetManager.barracksImage, screenX - AssetManager.barracksImage.width / 2 - 20 + this.TILE_WIDTH, screenY - AssetManager.barracksImage.height + this.TILE_HEIGHT * 2 - 15);
+                    else {
+                        let frontSlice = type.height - buildingPartY;
+                        let sideSlice = type.width - buildingPartX;
+
+                        if(buildingPartX == type.width)
+                        {
+                            const sx = frontSlice * (this.TILE_WIDTH / 2) + this.TILE_WIDTH / 2 + (type.width - 1) * (this.TILE_WIDTH / 2);
+                            const sy = 0;
+                            const sw = this.TILE_WIDTH / 2;
+                            const sh = type.image.height;
+                            const dx = screenX;
+                            const dy = screenY - type.image.height + frontSlice * (this.TILE_HEIGHT / 2) + this.TILE_HEIGHT / 2;;
+                            ctx.drawImage(type.image, sx, sy, sw, sh, dx, dy, this.TILE_WIDTH / 2, type.image.height);
+                        }
+                        if(buildingPartY == type.height)
+                        {
+                            const sx = (type.width - 1) * (this.TILE_WIDTH / 2)- sideSlice * (this.TILE_WIDTH / 2);
+                            const sy = 0;
+                            const sw = this.TILE_WIDTH / 2;
+                            const sh = type.image.height;
+                            const dx = screenX - this.TILE_WIDTH / 2;
+                            const dy = screenY - type.image.height + sideSlice * (this.TILE_HEIGHT / 2) + this.TILE_HEIGHT / 2;
+                            ctx.drawImage(type.image, sx, sy, sw, sh, dx, dy, this.TILE_WIDTH / 2, type.image.height);
+                        }
                     }
                 }
 
@@ -196,11 +236,15 @@ class Map {
     }
 
     addBuilding(building) {
-        const i = building.posX;
-        const j = building.posY;
+        const x = building.posX;
+        const y = building.posY;
 
-        this.tiles[i][j].building = building;
-        this.tiles[i][j].occupied = true;
+        for(let i = 0; i < building.type.width; i++) {
+            for(let j = 0; j < building.type.height; j++) {
+                this.tiles[x + i][y + j].building = building;
+                this.tiles[x + i][y + j].occupied = true;
+            }
+        }
     }
 
     addUnit(unit)

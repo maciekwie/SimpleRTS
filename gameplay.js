@@ -14,6 +14,22 @@ class Gameplay {
         this.selectionStartY = 0;
         this.selectionEndX = 0;
         this.selectionEndY = 0;
+
+        BuildingType.houseType.image = AssetManager.houseImage;
+        BuildingType.houseType.width = 3;
+        BuildingType.houseType.height = 3;
+
+        BuildingType.millType.image = AssetManager.millImage;
+        BuildingType.millType.width = 2;
+        BuildingType.millType.height = 3;
+
+        BuildingType.storehouseType.image = AssetManager.storehouseImage;
+        BuildingType.storehouseType.width = 1;
+        BuildingType.storehouseType.height = 3;
+
+        BuildingType.barracksType.image = AssetManager.barracksImage;
+        BuildingType.barracksType.width = 3;
+        BuildingType.barracksType.height = 2;
     }
 
     initMap() {
