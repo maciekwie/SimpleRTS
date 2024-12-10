@@ -16,6 +16,7 @@ AssetManager.loadAssets = function() {
     AssetManager.cropsFrontImage = AssetManager.loadImage("Assets/crops_front.png");
     AssetManager.growingCropsBackImage = AssetManager.loadImage("Assets/growing_crops_back.png");
     AssetManager.growingCropsFrontImage = AssetManager.loadImage("Assets/growing_crops_front.png");
+    AssetManager.workerAtlasImage = AssetManager.loadImage("Assets/worker_atlas.png");
     AssetManager.cropsHeight = 32;
 
     let millAtlas;
@@ -25,6 +26,15 @@ AssetManager.loadAssets = function() {
         millAnimationsData = await AssetManager.loadJSON("Assets/windmill_animations.json");
     })().then(() => {
         AssetManager.millAnimations = AssetManager.setAnimations(millAnimationsData.animations, millAtlas);
+    });
+
+    let workerAtlas;
+    let workerAnimationsData 
+    (async () => {
+        workerAtlas = await AssetManager.loadJSON("Assets/worker_atlas_data.json");
+        workerAnimationsData = await AssetManager.loadJSON("Assets/worker_animations.json");
+    })().then(() => {
+        AssetManager.workerAnimations = AssetManager.setAnimations(workerAnimationsData.animations, workerAtlas);
     });
 }
 

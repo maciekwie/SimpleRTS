@@ -30,6 +30,13 @@ class Unit extends GameObject{
         this.directionX = 0;
         this.directionY = 0;
         this.diagonalDirection = false;
+
+        this.animationManager = null;
+    }
+
+    nextFrame()
+    {
+        this.animationManager.nextFrame();
     }
 
     setPath(path) {
@@ -55,6 +62,9 @@ class Unit extends GameObject{
             }
             this.directionX = this.path[0][0] - this.posX;
             this.directionY = this.path[0][1] - this.posY;
+
+            this.animationManager.setDirection(this.directionX, this.directionY);
+            this.animationManager.updateState();
 
             if(this.directionX + this.directionY == 1 || this.directionX + this.directionY == -1)
                 this.diagonalDirection = false;

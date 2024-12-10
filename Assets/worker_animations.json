@@ -1,0 +1,40 @@
+{
+"animations": [
+        {
+        "name": "worker",
+        "frames": 1
+        },
+	{
+        "name": "worker_walk_000",
+        "frames": 30
+	},
+	{
+        "name": "worker_walk_001",
+        "frames": 30
+	},
+	{
+        "name": "worker_walk_002",
+        "frames": 30
+	},
+	{
+        "name": "worker_walk_003",
+        "frames": 30
+	},
+	{
+        "name": "worker_walk_004",
+        "frames": 30
+	},
+	{
+        "name": "worker_walk_005",
+        "frames": 30
+	},
+	{
+        "name": "worker_walk_006",
+        "frames": 30
+	},
+	{
+        "name": "worker_walk_007",
+        "frames": 30
+	}
+]
+}

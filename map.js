@@ -158,8 +158,10 @@ class Map {
                 }
 
                 this.tiles[i][j].units.forEach(unit => {
-                    let x = screenX - AssetManager.workerImage.width / 2;
-                    let y = screenY - AssetManager.workerImage.height / 2 - this.TILE_HEIGHT / 2;
+                    let frame = unit.animationManager.currentAnimation.frames[unit.animationManager.currentFrame];
+
+                    let x = screenX - frame.width / 2;
+                    let y = screenY - frame.height / 2 - this.TILE_HEIGHT / 2;
 
                     if(unit.moveState == MoveState.MOVE_OUT) {
                         const dx = unit.getDirectionX();
@@ -177,7 +179,7 @@ class Map {
  
                     }
 
-                    ctx.drawImage(AssetManager.workerImage, x, y);
+                    ctx.drawImage(AssetManager.workerAtlasImage, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
                 });
 
                 if(this.tiles[i][j].type == TileType.GROWING_CROPS) {

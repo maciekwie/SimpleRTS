@@ -1,6 +1,6 @@
-import { Map } from './map.js'
-import { Building, BuildingType } from './building.js'
-import { Unit, UnitType } from './unit.js'
+import { Map } from './map.js';
+import { Building, BuildingType } from './building.js';
+import { WorkerUnit } from './worker-unit.js';
 import { AssetManager } from './asset-manager.js';
 
 class Gameplay {
@@ -36,16 +36,6 @@ class Gameplay {
     }
 
     initMap() {
-        for(let i = 1; i < 2; i++) {
-            for(let j = 1; j < 2; j++) {
-                let unit = new Unit(UnitType.worker, i, j);
-
-                this.units.push(unit);
-
-                this.map.addUnit(unit);
-            }
-        }
-
         for(let i = 0; i < 200; i++) {
             const x = Math.round(Math.random() * (this.map.width - 1));
             const y = Math.round(Math.random() * (this.map.height - 1));
@@ -63,6 +53,7 @@ class Gameplay {
     exec (deltaTime) {
         this.units.forEach(unit => {
             unit.move(deltaTime, this.map);
+            unit.nextFrame();
         });
 
         for(let i = 0; i < this.growingCrops.length; i++)
@@ -220,7 +211,7 @@ class Gameplay {
             const posX = this.map.checkedTileX;
             const posY = this.map.checkedTileY;
 
-            let unit = new Unit(UnitType.worker, posX, posY);
+            let unit = new WorkerUnit(posX, posY);
 
             this.units.push(unit);
 
