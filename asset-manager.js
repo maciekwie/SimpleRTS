@@ -12,6 +12,11 @@ AssetManager.loadAssets = function() {
     AssetManager.tree3Image = AssetManager.loadImage("Assets/tree3.png");
     AssetManager.stoneImage = AssetManager.loadImage("Assets/stone.png");
     AssetManager.millImage = AssetManager.loadImage("Assets/windmill_atlas.png");
+    AssetManager.cropsBackImage = AssetManager.loadImage("Assets/crops_back.png");
+    AssetManager.cropsFrontImage = AssetManager.loadImage("Assets/crops_front.png");
+    AssetManager.growingCropsBackImage = AssetManager.loadImage("Assets/growing_crops_back.png");
+    AssetManager.growingCropsFrontImage = AssetManager.loadImage("Assets/growing_crops_front.png");
+    AssetManager.cropsHeight = 32;
 
     let millAtlas;
     let millAnimationsData 

@@ -109,6 +109,9 @@ function setEventListeners() {
         else if (keyName == "u") {
             gameplay.addUnit("worker");
         }
+        else if (keyName == "p") {
+            gameplay.plantCrops();
+        }
     });
 
     document.addEventListener("mousedown", (event) => {

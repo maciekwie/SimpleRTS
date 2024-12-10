@@ -9,6 +9,7 @@ class Gameplay {
 
         this.buildings = [];
         this.units = [];
+        this.growingCrops = [];
 
         this.selectionStartX = 0;
         this.selectionStartY = 0;
@@ -30,6 +31,8 @@ class Gameplay {
         BuildingType.barracksType.image = AssetManager.barracksImage;
         BuildingType.barracksType.width = 3;
         BuildingType.barracksType.height = 2;
+
+        this.CROPS_GROW_RATE = 0.1;
     }
 
     initMap() {
@@ -43,26 +46,32 @@ class Gameplay {
             }
         }
 
-        for(let i = 0; i < 200; i++)
-        {
+        for(let i = 0; i < 200; i++) {
             const x = Math.round(Math.random() * (this.map.width - 1));
             const y = Math.round(Math.random() * (this.map.height - 1));
 
             this.map.placeTree(x, y);
         }
-        for(let i = 0; i < 150; i++)
-            {
-                const x = Math.round(Math.random() * (this.map.width - 1));
-                const y = Math.round(Math.random() * (this.map.height - 1));
-    
-                this.map.placeStone(x, y);
-            }
+        for(let i = 0; i < 150; i++) {
+            const x = Math.round(Math.random() * (this.map.width - 1));
+            const y = Math.round(Math.random() * (this.map.height - 1));
+
+            this.map.placeStone(x, y);
+        }
     }
 
     exec (deltaTime) {
         this.units.forEach(unit => {
             unit.move(deltaTime, this.map);
         });
+
+        for(let i = 0; i < this.growingCrops.length; i++)
+        {
+            const pos = this.growingCrops[i];
+            if(this.map.growCrops(pos.x, pos.y, this.CROPS_GROW_RATE * deltaTime)) {
+                this.growingCrops.splice(i, 1);
+            }
+        }
     }
 
     render(ctx, selecting) {
@@ -217,6 +226,14 @@ class Gameplay {
 
             this.map.addUnit(unit);
         }
+    }
+
+    plantCrops() {
+        const posX = this.map.checkedTileX;
+        const posY = this.map.checkedTileY;
+
+        this.growingCrops.push({ x: posX, y: posY });
+        this.map.plantCrops(posX, posY);
     }
 }
 

@@ -76,13 +76,13 @@ class Map {
                 const screenY = this.getScreenY(i, j);
     
                 if(this.tiles[i][j].type == TileType.GRASS) {
-                    ctx.drawImage(AssetManager.grassImage, screenX - this.TILE_WIDTH, screenY);
+                    ctx.drawImage(AssetManager.grassImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
                 }
                 else if(this.tiles[i][j].type == TileType.STONE) {
-                    ctx.drawImage(AssetManager.stoneImage, screenX - this.TILE_WIDTH, screenY);
+                    ctx.drawImage(AssetManager.stoneImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
                 }
                 else if(this.tiles[i][j].type == TileType.TREE) {
-                    ctx.drawImage(AssetManager.grassImage, screenX - this.TILE_WIDTH, screenY);
+                    ctx.drawImage(AssetManager.grassImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
 
                     if(this.tiles[i][j].treeSort == 1)
                         ctx.drawImage(AssetManager.tree1Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
@@ -90,6 +90,12 @@ class Map {
                         ctx.drawImage(AssetManager.tree2Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
                     else if(this.tiles[i][j].treeSort == 3)
                         ctx.drawImage(AssetManager.tree3Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+                }
+                else if(this.tiles[i][j].type == TileType.GROWING_CROPS) {
+                    ctx.drawImage(AssetManager.growingCropsBackImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - AssetManager.cropsHeight);
+                }
+                else if(this.tiles[i][j].type == TileType.CROPS) {
+                    ctx.drawImage(AssetManager.cropsBackImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - AssetManager.cropsHeight );
                 }
 
                 if(this.tiles[i][j].building != null) {
@@ -99,7 +105,7 @@ class Map {
 
                     if(this.tiles[i][j].building.type === BuildingType.millType) {
                         let frame = this.tiles[i][j].building.currentAnimation.frames[this.tiles[i][j].building.currentFrame];
-                        
+
                         let frontSlice = type.height - buildingPartY;
                         let sideSlice = type.width - buildingPartX;
     
@@ -173,6 +179,13 @@ class Map {
 
                     ctx.drawImage(AssetManager.workerImage, x, y);
                 });
+
+                if(this.tiles[i][j].type == TileType.GROWING_CROPS) {
+                    ctx.drawImage(AssetManager.growingCropsFrontImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - AssetManager.cropsHeight );
+                }
+                else if(this.tiles[i][j].type == TileType.CROPS) {
+                    ctx.drawImage(AssetManager.cropsFrontImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - AssetManager.cropsHeight );
+                }
             }
         }
 
@@ -264,6 +277,29 @@ class Map {
     placeStone(x, y)
     {
         this.tiles[x][y].type = TileType.STONE;
+    }
+
+    plantCrops(x, y)
+    {
+        this.tiles[x][y].type = TileType.GROWING_CROPS;
+        this.tiles[x][y].status = 0;
+    }
+
+    growCrops(x, y, growRate)
+    {
+        if(this.tiles[x][y].type != TileType.GROWING_CROPS)
+            return false;
+
+        this.tiles[x][y].status += growRate;
+
+        if(this.tiles[x][y].status >= 1) {
+            this.tiles[x][y].status = 1;
+            this.tiles[x][y].type = TileType.CROPS;
+
+            return true;
+        }
+
+        return false;
     }
 
     moveUnitToTile(unit, x, y)
