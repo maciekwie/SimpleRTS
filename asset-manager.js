@@ -6,7 +6,6 @@ AssetManager.loadAssets = function() {
     AssetManager.houseImage = AssetManager.loadImage("Assets/house.png");
     AssetManager.storehouseImage = AssetManager.loadImage("Assets/storehouse.png");
     AssetManager.barracksImage = AssetManager.loadImage("Assets/barracks.png");
-    AssetManager.workerImage = AssetManager.loadImage("Assets/workel_walk_front0001.png");
     AssetManager.tree1Image = AssetManager.loadImage("Assets/tree1.png");
     AssetManager.tree2Image = AssetManager.loadImage("Assets/tree2.png");
     AssetManager.tree3Image = AssetManager.loadImage("Assets/tree3.png");
