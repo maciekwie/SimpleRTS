@@ -179,7 +179,7 @@ class Map {
  
                     }
 
-                    ctx.drawImage(AssetManager.workerAtlasImage, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
+                    ctx.drawImage(unit.animationManager.atlasImage, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
                 });
 
                 if(this.tiles[i][j].type == TileType.GROWING_CROPS) {

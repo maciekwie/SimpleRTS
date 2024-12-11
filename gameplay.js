@@ -2,6 +2,7 @@ import { Map } from './map.js';
 import { Building, BuildingType } from './building.js';
 import { UnitType } from './unit.js';
 import { WorkerUnit, WorkerAction } from './worker-unit.js';
+import { Spearman, SpearmanAction } from './spearman.js';
 import { TileType } from './tile.js'
 import { AssetManager } from './asset-manager.js';
 
@@ -222,11 +223,18 @@ class Gameplay {
     }
 
     addUnit(typeName) {
-        if(typeName == "worker") {
-            const posX = this.map.checkedTileX;
-            const posY = this.map.checkedTileY;
+        const posX = this.map.checkedTileX;
+        const posY = this.map.checkedTileY;
 
+        if(typeName == "worker") {
             let unit = new WorkerUnit(posX, posY);
+
+            this.units.push(unit);
+
+            this.map.addUnit(unit);
+        }
+        else if(typeName == "spearman") {
+            let unit = new Spearman(posX, posY);
 
             this.units.push(unit);
 

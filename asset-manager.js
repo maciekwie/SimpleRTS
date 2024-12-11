@@ -16,10 +16,11 @@ AssetManager.loadAssets = function() {
     AssetManager.growingCropsBackImage = AssetManager.loadImage("Assets/growing_crops_back.png");
     AssetManager.growingCropsFrontImage = AssetManager.loadImage("Assets/growing_crops_front.png");
     AssetManager.workerAtlasImage = AssetManager.loadImage("Assets/worker_atlas.png");
+    AssetManager.spearmanAtlasImage = AssetManager.loadImage("Assets/spearman_atlas.png");
     AssetManager.cropsHeight = 32;
 
     let millAtlas;
-    let millAnimationsData 
+    let millAnimationsData;
     (async () => {
         millAtlas = await AssetManager.loadJSON("Assets/windmill_atlas.json");
         millAnimationsData = await AssetManager.loadJSON("Assets/windmill_animations.json");
@@ -28,12 +29,21 @@ AssetManager.loadAssets = function() {
     });
 
     let workerAtlas;
-    let workerAnimationsData 
+    let workerAnimationsData;
     (async () => {
         workerAtlas = await AssetManager.loadJSON("Assets/worker_atlas_data.json");
         workerAnimationsData = await AssetManager.loadJSON("Assets/worker_animations.json");
     })().then(() => {
         AssetManager.workerAnimations = AssetManager.setAnimations(workerAnimationsData.animations, workerAtlas);
+    });
+
+    let spearmanAtlas;
+    let spearmanAnimationsData;
+    (async () => {
+        spearmanAtlas = await AssetManager.loadJSON("Assets/spearman_atlas_data.json");
+        spearmanAnimationsData = await AssetManager.loadJSON("Assets/spearman_animations.json");
+    })().then(() => {
+        AssetManager.spearmanAnimations = AssetManager.setAnimations(spearmanAnimationsData.animations, spearmanAtlas);
     });
 }
 

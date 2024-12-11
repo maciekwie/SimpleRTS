@@ -106,8 +106,11 @@ function setEventListeners() {
         else if (keyName == "m") {
             gameplay.build("mill");
         }
-        else if (keyName == "u") {
+        else if (keyName == "w") {
             gameplay.addUnit("worker");
+        }
+        else if (keyName == "u") {
+            gameplay.addUnit("spearman");
         }
         else if (keyName == "p") {
             gameplay.plantCrops();

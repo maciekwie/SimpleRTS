@@ -8,6 +8,8 @@ class UnitType {
 }
 
 UnitType.worker = new UnitType("worker");
+UnitType.spearman = new UnitType("spearman");
+UnitType.archer = new UnitType("archer");
 
 const MoveState = {
     STAY: Symbol("stay"),

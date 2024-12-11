@@ -15,6 +15,8 @@ class WorkerAnimationManager extends UnitAnimationManager {
     constructor() {
         super();
 
+        this.atlasImage = AssetManager.workerAtlasImage;
+
         this.currentAnimation = AssetManager.workerAnimations["worker_stand_000"];
         this.state = WorkerAnimationState.STAY;
     }

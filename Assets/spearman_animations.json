@@ -1,0 +1,108 @@
+{
+"animations": [
+	{
+        "name": "spearman_stand_000",
+        "frames": 1
+	},
+	{
+        "name": "spearman_stand_001",
+        "frames": 1
+	},
+	{
+        "name": "spearman_stand_002",
+        "frames": 1
+	},
+	{
+        "name": "spearman_stand_003",
+        "frames": 1
+	},
+	{
+        "name": "spearman_stand_004",
+        "frames": 1
+	},
+	{
+        "name": "spearman_stand_005",
+        "frames": 1
+	},
+	{
+        "name": "spearman_stand_006",
+        "frames": 1
+	},
+	{
+        "name": "spearman_stand_007",
+        "frames": 1
+	},
+	{
+        "name": "spearman_stand_000",
+        "frames": 1
+	},
+	{
+        "name": "spearman_stand_000",
+        "frames": 1
+	},
+	{
+        "name": "spearman_walk_000",
+        "frames": 30
+	},
+	{
+        "name": "spearman_walk_001",
+        "frames": 30
+	},
+	{
+        "name": "spearman_walk_002",
+        "frames": 30
+	},
+	{
+        "name": "spearman_walk_003",
+        "frames": 30
+	},
+	{
+        "name": "spearman_walk_004",
+        "frames": 30
+	},
+	{
+        "name": "spearman_walk_005",
+        "frames": 30
+	},
+	{
+        "name": "spearman_walk_006",
+        "frames": 30
+	},
+	{
+        "name": "spearman_walk_007",
+        "frames": 30
+	},
+	{
+        "name": "spearman_hit_000",
+        "frames": 15
+	},
+	{
+        "name": "spearman_hit_001",
+        "frames": 15
+	},
+	{
+        "name": "spearman_hit_002",
+        "frames": 15
+	},
+	{
+        "name": "spearman_hit_003",
+        "frames": 15
+	},
+	{
+        "name": "spearman_hit_004",
+        "frames": 15
+	},
+	{
+        "name": "spearman_hit_005",
+        "frames": 15
+	},
+	{
+        "name": "spearman_hit_006",
+        "frames": 15
+	},
+	{
+        "name": "spearman_hit_007",
+        "frames": 15
+	}
+]
+}

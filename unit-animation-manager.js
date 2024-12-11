@@ -3,6 +3,7 @@ class UnitAnimationManager {
     constructor() {
         this.currentFrame = 0;
         this.currentAnimation = null; 
+        this.atlasImage = null;
 
         this.direction = 0;
     }
