@@ -41,6 +41,8 @@ class Unit extends GameObject{
 
     setPath(path) {
         this.path = path;
+
+        this.startWalking();
     }
 
     move(deltaTime, map) {
@@ -58,6 +60,9 @@ class Unit extends GameObject{
 
             if(this.path.length == 0) {
                 this.moveState = MoveState.STAY;
+
+                this.destinationReached();
+
                 return;
             }
             this.directionX = this.path[0][0] - this.posX;
@@ -95,6 +100,12 @@ class Unit extends GameObject{
                 this.moveState = MoveState.STAY;
             }
         }
+    }
+
+    destinationReached() {
+    }
+
+    startWalking() {
     }
 
     getDirectionX() {

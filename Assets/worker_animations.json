@@ -1,9 +1,45 @@
 {
 "animations": [
-        {
-        "name": "worker",
+	{
+        "name": "worker_stand_000",
         "frames": 1
-        },
+	},
+	{
+        "name": "worker_stand_001",
+        "frames": 1
+	},
+	{
+        "name": "worker_stand_002",
+        "frames": 1
+	},
+	{
+        "name": "worker_stand_003",
+        "frames": 1
+	},
+	{
+        "name": "worker_stand_004",
+        "frames": 1
+	},
+	{
+        "name": "worker_stand_005",
+        "frames": 1
+	},
+	{
+        "name": "worker_stand_006",
+        "frames": 1
+	},
+	{
+        "name": "worker_stand_007",
+        "frames": 1
+	},
+	{
+        "name": "worker_stand_000",
+        "frames": 1
+	},
+	{
+        "name": "worker_stand_000",
+        "frames": 1
+	},
 	{
         "name": "worker_walk_000",
         "frames": 30
@@ -35,6 +71,18 @@
 	{
         "name": "worker_walk_007",
         "frames": 30
+	},
+	{
+        "name": "worker_woodcut",
+        "frames": 36
+	},
+	{
+        "name": "worker_stonemining",
+        "frames": 36
+	},
+	{
+        "name": "worker_cropsharvest",
+        "frames": 28
 	}
 ]
 }

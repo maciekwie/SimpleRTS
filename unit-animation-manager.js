@@ -13,7 +13,7 @@ class UnitAnimationManager {
 
         this.currentFrame++;
 
-        if(this.currentFrame == this.currentAnimation.numberOfFrames)
+        if(this.currentFrame >= this.currentAnimation.numberOfFrames)
             this.currentFrame = 0;
     }
 

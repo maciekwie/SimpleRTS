@@ -1,6 +1,8 @@
 import { Map } from './map.js';
 import { Building, BuildingType } from './building.js';
-import { WorkerUnit } from './worker-unit.js';
+import { UnitType } from './unit.js';
+import { WorkerUnit, WorkerAction } from './worker-unit.js';
+import { TileType } from './tile.js'
 import { AssetManager } from './asset-manager.js';
 
 class Gameplay {
@@ -166,10 +168,23 @@ class Gameplay {
         const x = this.map.getTileX(screenX, screenY);
         const y = this.map.getTileY(screenX, screenY);
 
+        let action = WorkerAction.IDLE;
+        if(this.map.tiles[x][y].type === TileType.TREE)
+            action = WorkerAction.CUT;
+        else if(this.map.tiles[x][y].type === TileType.STONE)
+            action = WorkerAction.MINE;
+        else if(this.map.tiles[x][y].type === TileType.CROPS)
+            action = WorkerAction.HARVEST;
+
         this.units.forEach(unit => {
             if(unit.selected) {
                 const path = this.map.getPath(unit.posX, unit.posY, x, y);
                 unit.setPath(path);
+
+                if(unit.type === UnitType.worker)
+                {
+                    unit.SetAction(action);
+                }
             }
         });
     }
