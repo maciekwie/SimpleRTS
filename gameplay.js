@@ -4,32 +4,37 @@ import { UnitType } from './unit.js';
 import { WorkerUnit, WorkerAction } from './worker-unit.js';
 import { Spearman, SpearmanAction } from './spearman.js';
 import { Archer, ArcherAction } from './archer.js';
-import { TileType } from './tile.js'
-import { AssetManager } from './asset-manager.js';
+import { TileType } from './tile.js';
 
 class Gameplay {
-    constructor(params) {
-        this.map = new Map(params.mapWidth, params.mapHeight);
+    constructor(params, loader) {
+        this.assets = loader.assets;
+
+        this.map = new Map(params.mapWidth, params.mapHeight, loader.assets);
 
         this.buildings = [];
         this.units = [];
         this.growingCrops = [];
 
-        BuildingType.houseType.image = AssetManager.houseImage;
+        BuildingType.houseType.image = loader.assets['house'];
         BuildingType.houseType.width = 3;
         BuildingType.houseType.height = 3;
 
-        BuildingType.millType.image = AssetManager.millImage;
+        BuildingType.millType.image = loader.assets['windmill_atlas'];
         BuildingType.millType.width = 2;
         BuildingType.millType.height = 3;
 
-        BuildingType.storehouseType.image = AssetManager.storehouseImage;
+        BuildingType.storehouseType.image = loader.assets['storehouse'];
         BuildingType.storehouseType.width = 1;
         BuildingType.storehouseType.height = 3;
 
-        BuildingType.barracksType.image = AssetManager.barracksImage;
+        BuildingType.barracksType.image = loader.assets['barracks'];;
         BuildingType.barracksType.width = 3;
         BuildingType.barracksType.height = 2;
+
+        UnitType.worker.animations = this.assets.workerAnimations;
+        UnitType.spearman.animations = this.assets.spearmanAnimations;
+        UnitType.archer.animations = this.assets.archerAnimations;
 
         this.CROPS_GROW_RATE = 0.1;
     }
@@ -112,7 +117,7 @@ class Gameplay {
         building.player = player;
 
         if(type === BuildingType.millType) {
-            building.currentAnimation = AssetManager.millAnimations["mill"];
+            building.currentAnimation = this.assets.millAnimations['mill'];
         }
 
         this.buildings.push(building);
@@ -124,12 +129,15 @@ class Gameplay {
 
         if(type === UnitType.worker) {
             unit = new WorkerUnit(posX, posY);
+            unit.animationManager.atlasImage = this.assets['worker_atlas'];
         }
         if(type === UnitType.spearman){
             unit = new Spearman(posX, posY);
+            unit.animationManager.atlasImage = this.assets['spearman_atlas'];
         }
         if(type === UnitType.archer) {
             unit = new Archer(posX, posY);
+            unit.animationManager.atlasImage = this.assets['archer_atlas'];
         }
 
         unit.player = player;

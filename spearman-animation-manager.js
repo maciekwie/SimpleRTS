@@ -1,5 +1,3 @@
-
-import { AssetManager } from './asset-manager.js';
 import { UnitAnimationManager } from './unit-animation-manager.js' 
 
 const SpearmanAnimationState = {
@@ -10,19 +8,19 @@ const SpearmanAnimationState = {
 Object.freeze(SpearmanAnimationState);
 
 class SpearmanAnimationManager extends UnitAnimationManager {
-    constructor() {
+    constructor(animations) {
         super();
 
-        this.atlasImage = AssetManager.spearmanAtlasImage;
+        this.animations = animations;
 
-        this.currentAnimation = AssetManager.spearmanAnimations["spearman_stand_000"];
+        this.currentAnimation = this.animations["spearman_stand_000"];
         this.state = SpearmanAnimationState.STAY;
     }
 
     updateState() {
         if(this.state === SpearmanAnimationState.WALK) {
             const animName = "spearman_walk_" + String(this.direction).padStart(3, '0');;
-            this.currentAnimation = AssetManager.spearmanAnimations[animName];
+            this.currentAnimation = this.animations[animName];
         }
     }
 
@@ -41,7 +39,7 @@ class SpearmanAnimationManager extends UnitAnimationManager {
             animName = "spearman_hit_" + String(this.direction).padStart(3, '0');;
         } 
 
-        this.currentAnimation = AssetManager.spearmanAnimations[animName];
+        this.currentAnimation = this.animations[animName];
     }
 }
 

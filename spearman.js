@@ -11,7 +11,7 @@ class Spearman extends Unit {
     constructor(posX, posY) {
         super(UnitType.worker, posX, posY);
 
-        this.animationManager = new SpearmanAnimationManager();
+        this.animationManager = new SpearmanAnimationManager(UnitType.spearman.animations);
 
         this.action = SpearmanAction.IDLE;
     }

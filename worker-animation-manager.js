@@ -1,5 +1,3 @@
-
-import { AssetManager } from './asset-manager.js';
 import { UnitAnimationManager } from './unit-animation-manager.js' 
 
 const WorkerAnimationState = {
@@ -12,19 +10,19 @@ const WorkerAnimationState = {
 Object.freeze(WorkerAnimationState);
 
 class WorkerAnimationManager extends UnitAnimationManager {
-    constructor() {
+    constructor(animations) {
         super();
 
-        this.atlasImage = AssetManager.workerAtlasImage;
+        this.animations = animations;
 
-        this.currentAnimation = AssetManager.workerAnimations["worker_stand_000"];
+        this.currentAnimation = this.animations["worker_stand_000"];
         this.state = WorkerAnimationState.STAY;
     }
 
     updateState() {
         if(this.state === WorkerAnimationState.WALK) {
             const animName = "worker_walk_" + String(this.direction).padStart(3, '0');;
-            this.currentAnimation = AssetManager.workerAnimations[animName];
+            this.currentAnimation = this.animations[animName];
         }
     }
 
@@ -49,7 +47,7 @@ class WorkerAnimationManager extends UnitAnimationManager {
             animName = "worker_cropsharvest";
         }
 
-        this.currentAnimation = AssetManager.workerAnimations[animName];
+        this.currentAnimation = this.animations[animName];
     }
 }
 

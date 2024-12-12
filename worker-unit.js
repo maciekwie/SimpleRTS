@@ -13,7 +13,7 @@ class WorkerUnit extends Unit {
     constructor(posX, posY) {
         super(UnitType.worker, posX, posY);
 
-        this.animationManager = new WorkerAnimationManager();
+        this.animationManager = new WorkerAnimationManager(UnitType.worker.animations);
 
         this.action = WorkerAction.IDLE;
     }

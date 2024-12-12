@@ -11,7 +11,7 @@ class Archer extends Unit {
     constructor(posX, posY) {
         super(UnitType.worker, posX, posY);
 
-        this.animationManager = new ArcherAnimationManager();
+        this.animationManager = new ArcherAnimationManager(UnitType.archer.animations);
 
         this.action = ArcherAction.IDLE;
     }

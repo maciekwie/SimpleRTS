@@ -1,12 +1,13 @@
 import { BuildingType } from './building.js';
-import { Tile, TileType } from './tile.js'
-import { MoveState } from './unit.js'
-import { AssetManager } from './asset-manager.js';
+import { Tile, TileType } from './tile.js';
+import { MoveState } from './unit.js';
 
 class Map {
-    constructor(width, height) {
+    constructor(width, height, assets) {
         this.width = width;
         this.height = height;
+
+        this.assets = assets;
 
         this.screenPosX = 0;
         this.screenPosY = 0;
@@ -70,32 +71,34 @@ class Map {
     }
 
     render(ctx) {
+        const assets = this.assets;
+
         for(let i = 0; i < this.width; i++) {
             for(let j = 0; j < this.height; j++) {
                 const screenX = this.getScreenX(i, j);
                 const screenY = this.getScreenY(i, j);
     
                 if(this.tiles[i][j].type == TileType.GRASS) {
-                    ctx.drawImage(AssetManager.grassImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
+                    ctx.drawImage(assets['grass'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
                 }
                 else if(this.tiles[i][j].type == TileType.STONE) {
-                    ctx.drawImage(AssetManager.stoneImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
+                    ctx.drawImage(assets['stone'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
                 }
                 else if(this.tiles[i][j].type == TileType.TREE) {
-                    ctx.drawImage(AssetManager.grassImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
+                    ctx.drawImage(assets['grass'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
 
                     if(this.tiles[i][j].treeSort == 1)
-                        ctx.drawImage(AssetManager.tree1Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+                        ctx.drawImage(assets['tree1'], screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
                     else if(this.tiles[i][j].treeSort == 2)
-                        ctx.drawImage(AssetManager.tree2Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+                        ctx.drawImage(assets['tree2'], screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
                     else if(this.tiles[i][j].treeSort == 3)
-                        ctx.drawImage(AssetManager.tree3Image, screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+                        ctx.drawImage(assets['tree3'], screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
                 }
                 else if(this.tiles[i][j].type == TileType.GROWING_CROPS) {
-                    ctx.drawImage(AssetManager.growingCropsBackImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - AssetManager.cropsHeight);
+                    ctx.drawImage(assets['growing_crops_back'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - assets.cropsHeight);
                 }
                 else if(this.tiles[i][j].type == TileType.CROPS) {
-                    ctx.drawImage(AssetManager.cropsBackImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - AssetManager.cropsHeight );
+                    ctx.drawImage(assets['crops_back'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - assets.cropsHeight );
                 }
 
                 if(this.tiles[i][j].building != null) {
@@ -183,10 +186,10 @@ class Map {
                 });
 
                 if(this.tiles[i][j].type == TileType.GROWING_CROPS) {
-                    ctx.drawImage(AssetManager.growingCropsFrontImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - AssetManager.cropsHeight );
+                    ctx.drawImage(assets['growing_crops_front'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - assets.cropsHeight );
                 }
                 else if(this.tiles[i][j].type == TileType.CROPS) {
-                    ctx.drawImage(AssetManager.cropsFrontImage, screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - AssetManager.cropsHeight );
+                    ctx.drawImage(assets['crops_front'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - assets.cropsHeight );
                 }
             }
         }

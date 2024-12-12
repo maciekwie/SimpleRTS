@@ -1,5 +1,3 @@
-
-import { AssetManager } from './asset-manager.js';
 import { UnitAnimationManager } from './unit-animation-manager.js' 
 
 const ArcherAnimationState = {
@@ -10,19 +8,19 @@ const ArcherAnimationState = {
 Object.freeze(ArcherAnimationState);
 
 class ArcherAnimationManager extends UnitAnimationManager {
-    constructor() {
+    constructor(animations) {
         super();
 
-        this.atlasImage = AssetManager.archerAtlasImage;
+        this.animations = animations;
 
-        this.currentAnimation = AssetManager.archerAnimations["archer_stand_000"];
+        this.currentAnimation = this.animations["archer_stand_000"];
         this.state = ArcherAnimationState.STAY;
     }
 
     updateState() {
         if(this.state === ArcherAnimationState.WALK) {
             const animName = "archer_walk_" + String(this.direction).padStart(3, '0');;
-            this.currentAnimation = AssetManager.archerAnimations[animName];
+            this.currentAnimation = this.animations[animName];
         }
     }
 
@@ -41,7 +39,7 @@ class ArcherAnimationManager extends UnitAnimationManager {
             animName = "archer_hit_" + String(this.direction).padStart(3, '0');;
         } 
 
-        this.currentAnimation = AssetManager.archerAnimations[animName];
+        this.currentAnimation = this.animations[animName];
     }
 }
 
