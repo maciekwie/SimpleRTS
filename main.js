@@ -1,5 +1,7 @@
 import { Gameplay } from './gameplay.js'
 import { AssetManager } from './asset-manager.js';
+import { Player } from './player.js'
+import { AIPlayer } from './AIPlayer.js';
 
 const SCREEN_WIDTH = 800;
 const SCREEN_HEIGHT = 600;
@@ -16,6 +18,8 @@ let arrows = {
 let selecting = false;
 
 let gameplay;
+let player;
+let aiPlayer;
 
 main();
 
@@ -30,6 +34,9 @@ function main() {
         mapWidth: 64,
         mapHeight: 64
     });
+
+    player = new Player("A", gameplay);
+    aiPlayer = new AIPlayer("B", gameplay);
 
     setEventListeners();
 
@@ -51,9 +58,13 @@ function main() {
             gameplay.nextFrame();
         }
 
+        player.moveMap(arrows);
+
         gameplay.exec(deltaTime);
-        gameplay.moveMap(arrows);
-        gameplay.render(ctx, selecting);
+        gameplay.render(ctx);
+
+        if(selecting)
+            player.drawSelectionRect(ctx);
 
 
         requestAnimationFrame(render);
@@ -95,28 +106,28 @@ function setEventListeners() {
             arrows.right = false;
         }
         else if (keyName == "h") {
-            gameplay.build("house");
+            player.build("house");
         }
         else if (keyName == "b") {
-            gameplay.build("barracks");
+            player.build("barracks");
         }
         else if (keyName == "s") {
-            gameplay.build("storehouse");
+            player.build("storehouse");
         }
         else if (keyName == "m") {
-            gameplay.build("mill");
+            player.build("mill");
         }
         else if (keyName == "w") {
-            gameplay.addUnit("worker");
+            player.addUnit("worker");
         }
         else if (keyName == "u") {
-            gameplay.addUnit("spearman");
+            player.addUnit("spearman");
         }
         else if (keyName == "a") {
-            gameplay.addUnit("archer");
+            player.addUnit("archer");
         }
         else if (keyName == "p") {
-            gameplay.plantCrops();
+            player.plantCrops();
         }
     });
 
@@ -127,7 +138,7 @@ function setEventListeners() {
         if(event.button == 0) {
             if(selecting == false) {
                 selecting = true;
-                gameplay.beginSelection(x, y);
+                player.beginSelection(x, y);
             }
         }
         else if(event.button == 2) {
@@ -140,16 +151,16 @@ function setEventListeners() {
         const y = event.y;
 
         if(event.button == 0) {
-            gameplay.onClick(x, y);
+            player.onClick(x, y);
 
             if(selecting)
             {
                 selecting = false;
-                gameplay.endSelection();
+                player.endSelection();
             }
         }
         else if(event.button == 2) {
-            gameplay.moveUnitsTo(x, y);
+            player.moveUnitsTo(x, y);
         }
     })
 
@@ -159,7 +170,7 @@ function setEventListeners() {
 
         if(selecting)
         {
-            gameplay.updateSelection(x, y);
+            player.updateSelection(x, y);
         }
     })
 }

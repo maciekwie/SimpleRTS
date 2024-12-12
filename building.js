@@ -17,6 +17,8 @@ class Building extends GameObject {
 
         this.type = type;
 
+        this.player = "";
+
         this.image = null;
         this.width = 1;
         this.height = 1;

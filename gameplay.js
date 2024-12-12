@@ -15,11 +15,6 @@ class Gameplay {
         this.units = [];
         this.growingCrops = [];
 
-        this.selectionStartX = 0;
-        this.selectionStartY = 0;
-        this.selectionEndX = 0;
-        this.selectionEndY = 0;
-
         BuildingType.houseType.image = AssetManager.houseImage;
         BuildingType.houseType.width = 3;
         BuildingType.houseType.height = 3;
@@ -71,10 +66,6 @@ class Gameplay {
 
     render(ctx, selecting) {
         this.map.render(ctx);
-
-        if(selecting) {
-            this.drawSelectionRect(ctx);
-        }
     }
 
     nextFrame() {
@@ -83,81 +74,9 @@ class Gameplay {
         })
     }
 
-    drawSelectionRect(ctx) {
-        ctx.strokeStyle = "blue";
-        ctx.lineWidth = 2;
-
-        let sx, sy, sw, sh;
-
-        if(this.selectionStartX < this.selectionEndX){
-            sx = this.selectionStartX - this.map.screenPosX;
-            sw = this.selectionEndX - this.selectionStartX;
-        }
-        else {
-            sx = this.selectionEndX - this.map.screenPosX;
-            sw = this.selectionStartX - this.selectionEndX;
-        }
-
-        if(this.selectionStartY < this.selectionEndY) {
-            sy = this.selectionStartY - this.map.screenPosY;
-            sh = this.selectionEndY - this.selectionStartY;
-        }
-        else {
-            sy = this.selectionEndY - this.map.screenPosY;
-            sh = this.selectionStartY - this.selectionEndY;
-        }
-
-        ctx.rect(sx, sy, sw, sh);
-        ctx.stroke();
-    }
-
-    moveMap(arrows) {
-        this.map.moveMap(arrows);
-    }
-
-    onClick(x, y) {
-        this.map.checkTile(x, y);
-    }
-
-    beginSelection(x, y) {
-        this.selectionStartX = x + this.map.screenPosX;
-        this.selectionStartY = y + this.map.screenPosY;
-    }
-
-    updateSelection(x, y)  {
-        this.selectionEndX = x + this.map.screenPosX;
-        this.selectionEndY = y + this.map.screenPosY;
-
-        this.selectUnits();
-    }
-
-    endSelection() {
-
-    }
-
-    selectUnits() {
-        let sx, sy, ex, ey;
-
-        if(this.selectionStartX < this.selectionEndY) {
-            sx = this.map.getTileX_map(this.selectionStartX, this.selectionStartY);
-            ex = this.map.getTileX_map(this.selectionEndX, this.selectionEndY);
-        }
-        else {
-            sx = this.map.getTileX_map(this.selectionEndX, this.selectionEndY);
-            ex = this.map.getTileX_map(this.selectionStartX, this.selectionStartY);
-        }
-
-        if(this.selectionStartX < this.selectionEndY) {
-            sy = this.map.getTileY_map(this.selectionStartX, this.selectionStartY);
-            ey = this.map.getTileY_map(this.selectionEndX, this.selectionEndY);
-        }
-        else {
-            sy = this.map.getTileY_map(this.selectionEndX, this.selectionEndY);
-            ey = this.map.getTileY_map(this.selectionStartX, this.selectionStartY);
-        }
-
+    selectUnits(sx, sy, ex, ey, player) {
         this.units.forEach(unit => {
-            if(isPointInSelection(sx, sy, ex, ey, unit.posX, unit.posY)) {
+            if(unit.player == player && isPointInSelection(sx, sy, ex, ey, unit.posX, unit.posY)) {
                 unit.selected = true;
             }
             else {
@@ -166,10 +85,7 @@ class Gameplay {
         });
     }
 
-    moveUnitsTo(screenX, screenY) {
-        const x = this.map.getTileX(screenX, screenY);
-        const y = this.map.getTileY(screenX, screenY);
-
+    moveUnitsTo(x, y) {
         let action = WorkerAction.IDLE;
         if(this.map.tiles[x][y].type === TileType.TREE)
             action = WorkerAction.CUT;
@@ -191,69 +107,38 @@ class Gameplay {
         });
     }
 
-    build(typeName) {
-        const posX = this.map.checkedTileX;
-        const posY = this.map.checkedTileY;
-        
-        if(typeName == "house") {
-            let building = new Building(BuildingType.houseType, posX, posY);
+    addBuilding(type, posX, posY, player) {
+        let building = new Building(type, posX, posY);
+        building.player = player;
 
-            this.buildings.push(building);
-            this.map.addBuilding(building);
-        }
-        else if(typeName == "mill") {
-            let building = new Building(BuildingType.millType, posX, posY);
-
+        if(type === BuildingType.millType) {
             building.currentAnimation = AssetManager.millAnimations["mill"];
-
-            this.buildings.push(building);
-            this.map.addBuilding(building);
         }
-        else if(typeName == "barracks") {
-            let building = new Building(BuildingType.barracksType, posX, posY);
 
-            this.buildings.push(building);
-            this.map.addBuilding(building);
-        }
-        else if(typeName == "storehouse") {
-            let building = new Building(BuildingType.storehouseType, posX, posY);
-
-            this.buildings.push(building);
-            this.map.addBuilding(building);
-        }
+        this.buildings.push(building);
+        this.map.addBuilding(building);
     }
 
-    addUnit(typeName) {
-        const posX = this.map.checkedTileX;
-        const posY = this.map.checkedTileY;
+    addUnit(type, posX, posY, player) {
+        let unit;
 
-        if(typeName == "worker") {
-            let unit = new WorkerUnit(posX, posY);
-
-            this.units.push(unit);
-
-            this.map.addUnit(unit);
+        if(type === UnitType.worker) {
+            unit = new WorkerUnit(posX, posY);
         }
-        else if(typeName == "spearman") {
-            let unit = new Spearman(posX, posY);
-
-            this.units.push(unit);
-
-            this.map.addUnit(unit);
+        if(type === UnitType.spearman){
+            unit = new Spearman(posX, posY);
         }
-        else if(typeName == "archer") {
-            let unit = new Archer(posX, posY);
-
-            this.units.push(unit);
-
-            this.map.addUnit(unit);
+        if(type === UnitType.archer) {
+            unit = new Archer(posX, posY);
         }
+
+        unit.player = player;
+
+        this.units.push(unit);
+        this.map.addUnit(unit);
     }
 
-    plantCrops() {
-        const posX = this.map.checkedTileX;
-        const posY = this.map.checkedTileY;
-
+    plantCrops(posX, posY) {
         this.growingCrops.push({ x: posX, y: posY });
         this.map.plantCrops(posX, posY);
     }
