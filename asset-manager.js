@@ -17,6 +17,7 @@ AssetManager.loadAssets = function() {
     AssetManager.growingCropsFrontImage = AssetManager.loadImage("Assets/growing_crops_front.png");
     AssetManager.workerAtlasImage = AssetManager.loadImage("Assets/worker_atlas.png");
     AssetManager.spearmanAtlasImage = AssetManager.loadImage("Assets/spearman_atlas.png");
+    AssetManager.archerAtlasImage = AssetManager.loadImage("Assets/archer_atlas.png");
     AssetManager.cropsHeight = 32;
 
     let millAtlas;
@@ -44,6 +45,15 @@ AssetManager.loadAssets = function() {
         spearmanAnimationsData = await AssetManager.loadJSON("Assets/spearman_animations.json");
     })().then(() => {
         AssetManager.spearmanAnimations = AssetManager.setAnimations(spearmanAnimationsData.animations, spearmanAtlas);
+    });
+
+    let archerAtlas;
+    let archerAnimationsData;
+    (async () => {
+        archerAtlas = await AssetManager.loadJSON("Assets/archer_atlas_data.json");
+        archerAnimationsData = await AssetManager.loadJSON("Assets/archer_animations.json");
+    })().then(() => {
+        AssetManager.archerAnimations = AssetManager.setAnimations(archerAnimationsData.animations, archerAtlas);
     });
 }
 

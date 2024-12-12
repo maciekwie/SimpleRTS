@@ -3,6 +3,7 @@ import { Building, BuildingType } from './building.js';
 import { UnitType } from './unit.js';
 import { WorkerUnit, WorkerAction } from './worker-unit.js';
 import { Spearman, SpearmanAction } from './spearman.js';
+import { Archer, ArcherAction } from './archer.js';
 import { TileType } from './tile.js'
 import { AssetManager } from './asset-manager.js';
 
@@ -235,6 +236,13 @@ class Gameplay {
         }
         else if(typeName == "spearman") {
             let unit = new Spearman(posX, posY);
+
+            this.units.push(unit);
+
+            this.map.addUnit(unit);
+        }
+        else if(typeName == "archer") {
+            let unit = new Archer(posX, posY);
 
             this.units.push(unit);
 

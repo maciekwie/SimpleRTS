@@ -112,6 +112,9 @@ function setEventListeners() {
         else if (keyName == "u") {
             gameplay.addUnit("spearman");
         }
+        else if (keyName == "a") {
+            gameplay.addUnit("archer");
+        }
         else if (keyName == "p") {
             gameplay.plantCrops();
         }

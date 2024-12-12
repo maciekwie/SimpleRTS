@@ -1,0 +1,108 @@
+{
+"animations": [
+	{
+        "name": "archer_stand_000",
+        "frames": 1
+	},
+	{
+        "name": "archer_stand_001",
+        "frames": 1
+	},
+	{
+        "name": "archer_stand_002",
+        "frames": 1
+	},
+	{
+        "name": "archer_stand_003",
+        "frames": 1
+	},
+	{
+        "name": "archer_stand_004",
+        "frames": 1
+	},
+	{
+        "name": "archer_stand_005",
+        "frames": 1
+	},
+	{
+        "name": "archer_stand_006",
+        "frames": 1
+	},
+	{
+        "name": "archer_stand_007",
+        "frames": 1
+	},
+	{
+        "name": "archer_stand_000",
+        "frames": 1
+	},
+	{
+        "name": "archer_stand_000",
+        "frames": 1
+	},
+	{
+        "name": "archer_walk_000",
+        "frames": 30
+	},
+	{
+        "name": "archer_walk_001",
+        "frames": 30
+	},
+	{
+        "name": "archer_walk_002",
+        "frames": 30
+	},
+	{
+        "name": "archer_walk_003",
+        "frames": 30
+	},
+	{
+        "name": "archer_walk_004",
+        "frames": 30
+	},
+	{
+        "name": "archer_walk_005",
+        "frames": 30
+	},
+	{
+        "name": "archer_walk_006",
+        "frames": 30
+	},
+	{
+        "name": "archer_walk_007",
+        "frames": 30
+	},
+	{
+        "name": "archer_shoot_000",
+        "frames": 30
+	},
+	{
+        "name": "archer_shoot_001",
+        "frames": 30
+	},
+	{
+        "name": "archer_shoot_002",
+        "frames": 30
+	},
+	{
+        "name": "archer_shoot_003",
+        "frames": 30
+	},
+	{
+        "name": "archer_shoot_004",
+        "frames": 30
+	},
+	{
+        "name": "archer_shoot_005",
+        "frames": 30
+	},
+	{
+        "name": "archer_shoot_006",
+        "frames": 30
+	},
+	{
+        "name": "archer_shoot_007",
+        "frames": 30
+	}
+]
+}
