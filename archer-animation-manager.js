@@ -22,6 +22,10 @@ class ArcherAnimationManager extends UnitAnimationManager {
             const animName = "archer_walk_" + String(this.direction).padStart(3, '0');;
             this.currentAnimation = this.animations[animName];
         }
+        else if(this.state === ArcherAnimationState.SHOOT) {
+            const animName = "archer_shoot_" + String(this.direction).padStart(3, '0');;
+            this.currentAnimation = this.animations[animName];
+        }
     }
 
     setAnimationState(state)
@@ -35,8 +39,8 @@ class ArcherAnimationManager extends UnitAnimationManager {
         else if(state === ArcherAnimationState.WALK) {
             animName = "archer_walk_" + String(this.direction).padStart(3, '0');;
         }
-        else if(state === ArcherAnimationState.HIT) {
-            animName = "archer_hit_" + String(this.direction).padStart(3, '0');;
+        else if(state === ArcherAnimationState.SHOOT) {
+            animName = "archer_shoot_" + String(this.direction).padStart(3, '0');;
         } 
 
         this.currentAnimation = this.animations[animName];

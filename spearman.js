@@ -3,13 +3,13 @@ import { SpearmanAnimationManager, SpearmanAnimationState } from './spearman-ani
 
 const SpearmanAction = {
     IDLE: Symbol("idle"),
-    HIT: Symbol("hit")
+    ATTACK: Symbol("attack")
 };
 Object.freeze(SpearmanAction);
 
 class Spearman extends Unit {
     constructor(posX, posY) {
-        super(UnitType.worker, posX, posY);
+        super(UnitType.spearman, posX, posY);
 
         this.animationManager = new SpearmanAnimationManager(UnitType.spearman.animations);
 
@@ -25,7 +25,7 @@ class Spearman extends Unit {
     }
 
     destinationReached() {
-        if(this.action === SpearmanAction.HIT) {
+        if(this.action === SpearmanAction.ATTACK) {
             this.animationManager.setAnimationState(SpearmanAnimationState.HIT);
         }
         else {

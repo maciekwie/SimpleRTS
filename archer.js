@@ -3,21 +3,29 @@ import { ArcherAnimationManager, ArcherAnimationState } from './archer-animation
 
 const ArcherAction = {
     IDLE: Symbol("idle"),
-    SHOOT: Symbol("shoot")
+    SHOOT: Symbol("shoot"),
+    ATTACK: Symbol("attack")
 };
 Object.freeze(ArcherAction);
 
 class Archer extends Unit {
     constructor(posX, posY) {
-        super(UnitType.worker, posX, posY);
+        super(UnitType.archer, posX, posY);
 
         this.animationManager = new ArcherAnimationManager(UnitType.archer.animations);
 
         this.action = ArcherAction.IDLE;
     }
 
-    SetAction(action) {
-        this.action = action;
+    exec(deltaTime, map) {
+        if(this.action === ArcherAction.SHOOT && this.targetUnit != null)
+        {
+            this.directionX = this.targetUnit.posX - this.posX;
+            this.directionY = this.targetUnit.posY - this.posY;
+
+            this.animationManager.setDirection(this.directionX, this.directionY);
+            this.animationManager.updateState();
+        }
     }
 
     startWalking() {
@@ -26,6 +34,15 @@ class Archer extends Unit {
 
     destinationReached() {
         this.animationManager.setAnimationState(ArcherAnimationState.STAY);
+    }
+
+    destinationNear() {
+        if(this.action === ArcherAction.ATTACK) {
+            this.stopWalking();
+
+            this.action = ArcherAction.SHOOT;
+            this.animationManager.setAnimationState(ArcherAnimationState.SHOOT);
+        }
     }
 }
 

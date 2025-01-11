@@ -1,8 +1,8 @@
 import { Player } from './player.js'
 
 class AIPlayer extends Player{
-    constructor(name) {
-        super(name)
+    constructor(name, gameplay) {
+        super(name, gameplay)
     }
 }
 

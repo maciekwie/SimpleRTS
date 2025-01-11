@@ -45,6 +45,8 @@ function main() {
         player = new Player("A", gameplay);
         aiPlayer = new AIPlayer("B", gameplay);
 
+        gameplay.playerName = player.playerName;
+
         gameplay.initMap();
         gameplay.addUnit(UnitType.spearman, 5, 60, aiPlayer.playerName);
         gameplay.addUnit(UnitType.spearman, 6, 60, aiPlayer.playerName);

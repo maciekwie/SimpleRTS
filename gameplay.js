@@ -57,6 +57,8 @@ class Gameplay {
     exec (deltaTime) {
         this.units.forEach(unit => {
             unit.move(deltaTime, this.map);
+            unit.exec(deltaTime, this.map);
+            
             unit.nextFrame();
         });
 
@@ -91,22 +93,50 @@ class Gameplay {
     }
 
     moveUnitsTo(x, y) {
-        let action = WorkerAction.IDLE;
+        let workerAction = WorkerAction.IDLE;
         if(this.map.tiles[x][y].type === TileType.TREE)
-            action = WorkerAction.CUT;
+            workerAction = WorkerAction.CUT;
         else if(this.map.tiles[x][y].type === TileType.STONE)
-            action = WorkerAction.MINE;
+            workerAction = WorkerAction.MINE;
         else if(this.map.tiles[x][y].type === TileType.CROPS)
-            action = WorkerAction.HARVEST;
+            workerAction = WorkerAction.HARVEST;
+
+        let attack = false;
+        let targetUnit = null;
+
+        for(let i = 0; i < this.map.tiles[x][y].units.length; i++) {
+            if(this.map.tiles[x][y].units[i].player.playerName != this.playerName) {
+                attack = true;
+                targetUnit = this.map.tiles[x][y].units[i];
+
+                break;
+            }
+        }
+
+        let spearmanAction = SpearmanAction.IDLE
+        let archerAction = ArcherAction.IDLE;
+        if(attack) {
+            spearmanAction = SpearmanAction.ATTACK;
+            archerAction = ArcherAction.ATTACK;
+        }
 
         this.units.forEach(unit => {
             if(unit.selected) {
                 const path = this.map.getPath(unit.posX, unit.posY, x, y);
                 unit.setPath(path);
+                unit.setDestination(x, y);
 
-                if(unit.type === UnitType.worker)
-                {
-                    unit.SetAction(action);
+                if(unit.type === UnitType.worker) {
+                    unit.setAction(workerAction);
+                }
+                else if(unit.type === UnitType.spearman)  {
+                    unit.setAction(spearmanAction);
+                }
+                else if(unit.type === UnitType.archer) {
+                    unit.setAction(archerAction);
+                    if(attack) {
+                        unit.setTargetUnit(targetUnit);
+                    }
                 }
             }
         });
