@@ -16,10 +16,6 @@ class Spearman extends Unit {
         this.action = SpearmanAction.IDLE;
     }
 
-    SetAction(action) {
-        this.action = action;
-    }
-
     startWalking() {
         this.animationManager.setAnimationState(SpearmanAnimationState.WALK);
     }

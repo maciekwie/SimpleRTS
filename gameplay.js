@@ -57,7 +57,7 @@ class Gameplay {
     exec (deltaTime) {
         this.units.forEach(unit => {
             unit.move(deltaTime, this.map);
-            unit.exec(deltaTime, this.map);
+            unit.exec(deltaTime, this);
             
             unit.nextFrame();
         });
@@ -93,13 +93,13 @@ class Gameplay {
     }
 
     moveUnitsTo(x, y) {
-        let workerAction = WorkerAction.IDLE;
+        let workerAction = WorkerAction.GO_TO_DEST;
         if(this.map.tiles[x][y].type === TileType.TREE)
-            workerAction = WorkerAction.CUT;
+            workerAction = WorkerAction.GO_CUT;
         else if(this.map.tiles[x][y].type === TileType.STONE)
-            workerAction = WorkerAction.MINE;
+            workerAction = WorkerAction.GO_MINE;
         else if(this.map.tiles[x][y].type === TileType.CROPS)
-            workerAction = WorkerAction.HARVEST;
+            workerAction = WorkerAction.GO_HARVEST;
 
         let attack = false;
         let targetUnit = null;
@@ -140,6 +140,30 @@ class Gameplay {
                 }
             }
         });
+    }
+
+    getNearestBuilding(type, x, y, player) {
+        const buildingsArr = this.buildings.filter((building) => building.type === type && building.player === player);    
+        
+        if(buildingsArr.length == 0)
+            return null;
+        else if(buildingsArr.length == 1)
+            return buildingsArr[0];
+        
+        let building = buildingsArr[0];
+        let dist = distance(x, y, building.posX, building.posY);
+
+        for(let i = 1; i < buildingsArr.length; i++) {
+            let newBuilding = buildingsArr[i];
+            let newDist = distance(x, y, newBuilding.posX, newBuilding.posY);
+
+            if(newDist < dist) {
+                dist = newDist;
+                building = newBuilding;
+            }
+        }
+
+        return building;
     }
 
     addBuilding(type, posX, posY, player) {
@@ -206,4 +230,10 @@ function isPointInSelection(sx, sy, ex, ey, x, y) {
     return (xPrime >= xMin && xPrime <= xMax && yPrime >= yMin && yPrime <= yMax);
 }
 
-export { Gameplay }
+function distance(x1, y1, x2, y2) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+export { Gameplay, distance }
