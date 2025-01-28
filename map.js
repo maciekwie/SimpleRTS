@@ -317,6 +317,20 @@ class Map {
         unit.posY = y;
     }
 
+    getEnemies(x, y, playerName) {
+        return this.tiles[x][y].units.filter((unit) => unit.player != playerName);
+    }
+
+    deleteUnit(unit) {
+        const x = unit.posX;
+        const y = unit.posY;
+
+        const index = this.tiles[x][y].units.indexOf(unit);
+        if (index > -1) { 
+            this.tiles[x][y].units.splice(index, 1);
+        }
+    }
+
     getPath(startRow, startCol, endRow, endCol)
     {
         const numRows = this.tiles.length;

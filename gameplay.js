@@ -54,10 +54,10 @@ class Gameplay {
         }
     }
 
-    exec (deltaTime) {
+    exec (deltaTime, time) {
         this.units.forEach(unit => {
             unit.move(deltaTime, this.map);
-            unit.exec(deltaTime, this);
+            unit.exec(deltaTime, time, this);
             
             unit.nextFrame();
         });
@@ -71,7 +71,7 @@ class Gameplay {
         }
     }
 
-    render(ctx, selecting) {
+    render(ctx) {
         this.map.render(ctx);
     }
 
@@ -105,7 +105,7 @@ class Gameplay {
         let targetUnit = null;
 
         for(let i = 0; i < this.map.tiles[x][y].units.length; i++) {
-            if(this.map.tiles[x][y].units[i].player.playerName != this.playerName) {
+            if(this.map.tiles[x][y].units[i].player != this.playerName) {
                 attack = true;
                 targetUnit = this.map.tiles[x][y].units[i];
 
@@ -116,8 +116,8 @@ class Gameplay {
         let spearmanAction = SpearmanAction.IDLE
         let archerAction = ArcherAction.IDLE;
         if(attack) {
-            spearmanAction = SpearmanAction.ATTACK;
-            archerAction = ArcherAction.ATTACK;
+            spearmanAction = SpearmanAction.GO_ATTACK;
+            archerAction = ArcherAction.GO_ATTACK;
         }
 
         this.units.forEach(unit => {
@@ -140,6 +140,28 @@ class Gameplay {
                 }
             }
         });
+    }
+
+    hitUnits(attackingUnit, damage) {
+        const player = attackingUnit.player;
+        const posX = attackingUnit.posX;
+        const posY = attackingUnit.posY;
+
+        let enemies = this.map.getEnemies(posX, posY, player);
+        if(enemies.length == 0)
+            return;
+
+        let index = Math.floor(Math.random() * enemies.length);
+        enemies[index].health -= damage;
+        enemies[index].unitAttacked();
+
+        if(enemies[index].health <= 0) {
+            if(enemies.length === 1) {
+                attackingUnit.enemiesDefeated();
+            }
+
+            this.destroyUnit(enemies[index]);
+        }
     }
 
     getNearestBuilding(type, x, y, player) {
@@ -203,6 +225,13 @@ class Gameplay {
     plantCrops(posX, posY) {
         this.growingCrops.push({ x: posX, y: posY });
         this.map.plantCrops(posX, posY);
+    }
+
+    destroyUnit(unit) {
+        this.map.deleteUnit(unit);
+
+        const index = this.units.indexOf(unit);
+        this.units.splice(index, 1);
     }
 }
 

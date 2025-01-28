@@ -20,10 +20,13 @@ const MoveState = {
 Object.freeze(MoveState);
 
 class Unit extends GameObject{
+    static DISTANCE_TRIGGER = 6;
+
     constructor(type, posX, posY) {
         super(posX, posY);
 
         this.type = type;
+        this.health = 1;
 
         this.player = "";
 
@@ -40,12 +43,10 @@ class Unit extends GameObject{
 
         this.animationManager = null;
 
-        Unit.DISTANCE_TRIGGER = 6;
-
         this.targerUnit = null;
     }
 
-    exec(deltaTime, gameplay) {
+    exec(deltaTime, time, gameplay) {
     }
 
     nextFrame() {

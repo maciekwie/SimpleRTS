@@ -79,7 +79,7 @@ function main() {
 
         player.moveMap(arrows);
 
-        gameplay.exec(deltaTime);
+        gameplay.exec(deltaTime, now);
         gameplay.render(ctx);
 
         if(selecting)

@@ -6,6 +6,9 @@ class UnitAnimationManager {
         this.atlasImage = null;
 
         this.direction = 0;
+
+        this.animationFinished = false;
+        this.loop = true;
     }
 
     nextFrame() {
@@ -14,8 +17,15 @@ class UnitAnimationManager {
 
         this.currentFrame++;
 
-        if(this.currentFrame >= this.currentAnimation.numberOfFrames)
-            this.currentFrame = 0;
+        if(this.currentFrame >= this.currentAnimation.numberOfFrames) {
+            if(this.loop === false)  {
+                this.animationFinished = true;
+                this.currentFrame = this.currentAnimation.numberOfFrames - 1;
+            }
+            else {
+                this.currentFrame = 0;
+            }
+        }
     }
 
     setDirection(x, y) {

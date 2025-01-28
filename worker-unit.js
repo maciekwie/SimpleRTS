@@ -34,7 +34,7 @@ class WorkerUnit extends Unit {
         this.actionProgress = 0;
     }
 
-    exec(deltaTime, gameplay) {
+    exec(deltaTime, time, gameplay) {
         let destType = null;
 
         if (this.action == WorkerAction.CUT) {

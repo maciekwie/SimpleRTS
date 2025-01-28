@@ -4,7 +4,7 @@ import { ArcherAnimationManager, ArcherAnimationState } from './archer-animation
 const ArcherAction = {
     IDLE: Symbol("idle"),
     SHOOT: Symbol("shoot"),
-    ATTACK: Symbol("attack")
+    GO_ATTACK: Symbol("go attack")
 };
 Object.freeze(ArcherAction);
 
@@ -37,7 +37,7 @@ class Archer extends Unit {
     }
 
     destinationNear() {
-        if(this.action === ArcherAction.ATTACK) {
+        if(this.action === ArcherAction.GO_ATTACK) {
             this.stopWalking();
 
             this.action = ArcherAction.SHOOT;
