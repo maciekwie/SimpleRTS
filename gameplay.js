@@ -6,7 +6,41 @@ import { Spearman, SpearmanAction } from './spearman.js';
 import { Archer, ArcherAction } from './archer.js';
 import { TileType } from './tile.js';
 
+class Arrow {
+    static SPEED = 8;
+
+    constructor() {
+        this.startX = 0;
+        this.startY = 0;
+        this.targetX = 0;
+        this.targetY = 0;
+        this.damage = 0;
+        this.progress = 0;
+        this.distance = 0;
+
+        this.active = false;
+    }
+
+    activate(startX, startY, targetX, targetY, damage) {
+        this.startX = startX;
+        this.startY = startY;
+        this.targetX = targetX;
+        this.targetY = targetY;
+        this.damage = damage;
+        this.progress = 0;
+        this.distance = distance(startX, startY, targetX, targetY);
+
+        this.active = true;
+    }
+
+    exec(deltatTime) {
+        this.progress += Arrow.SPEED / this.distance * deltatTime;
+    }
+}
+
 class Gameplay {
+    static CROPS_GROW_RATE = 0.1;
+
     constructor(params, loader) {
         this.assets = loader.assets;
 
@@ -36,7 +70,10 @@ class Gameplay {
         UnitType.spearman.animations = this.assets.spearmanAnimations;
         UnitType.archer.animations = this.assets.archerAnimations;
 
-        this.CROPS_GROW_RATE = 0.1;
+        this.arrows = [];
+        for(let i = 0; i < 100; i++) {
+            this.arrows.push(new Arrow());
+        }
     }
 
     initMap() {
@@ -62,17 +99,28 @@ class Gameplay {
             unit.nextFrame();
         });
 
-        for(let i = 0; i < this.growingCrops.length; i++)
-        {
+        for(let i = 0; i < this.growingCrops.length; i++) {
             const pos = this.growingCrops[i];
             if(this.map.growCrops(pos.x, pos.y, this.CROPS_GROW_RATE * deltaTime)) {
                 this.growingCrops.splice(i, 1);
+            }
+        }
+
+        for(let i = 0; i < this.arrows.length; i++) {
+            if(this.arrows[i].active) {
+                this.arrows[i].exec(deltaTime);
+
+                if(this.arrows[i].progress >= 1) {
+                    this.arrowHit(this.arrows[i].targetX, this.arrows[i].targetY, this.arrows[i].damage);
+                    this.arrows[i].active = false;
+                }
             }
         }
     }
 
     render(ctx) {
         this.map.render(ctx);
+        this.map.renderArrows(ctx, this.arrows);
     }
 
     nextFrame() {
@@ -161,6 +209,31 @@ class Gameplay {
             }
 
             this.destroyUnit(enemies[index]);
+        }
+    }
+
+    arrowHit(targetX, targetY, damage) {
+        let units = this.map.tiles[targetX][targetY].units;
+
+        if(units.length == 0)
+            return;
+    
+        let index = Math.floor(Math.random() * units.length);
+        units[index].health -= damage;
+        units[index].unitAttacked();
+
+        if(units[index].health <= 0) {
+            this.destroyUnit(units[index]);
+        }
+    }
+
+    shootArrow(startX, startY, targetX, targetY, damage) {
+        for(let i = 0; i < this.arrows.length; i++) {
+            if(this.arrows[i].active === false) {
+                this.arrows[i].activate(startX, startY, targetX, targetY, damage);
+
+                break;
+            }
         }
     }
 

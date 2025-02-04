@@ -232,6 +232,30 @@ class Map {
         ctx.stroke();
     }
 
+    renderArrows(ctx, arrows) {
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 2;
+        
+        for(let i = 0; i < arrows.length; i++) {
+            if(arrows[i].active) {
+                const length = 0.6 / arrows[i].distance;
+                const startX = arrows[i].startX - 0.5;
+                const startY = arrows[i].startY - 0.8;
+                const dx = arrows[i].targetX - startX; 
+                const dy = arrows[i].targetY - startY; 
+                const sx = this.getScreenX(startX + dx * arrows[i].progress, startY + dy * arrows[i].progress);
+                const sy = this.getScreenY(startX + dx * arrows[i].progress, startY + dy * arrows[i].progress);
+                const tx = this.getScreenX(startX + dx * (arrows[i].progress + length), startY + dy * (arrows[i].progress + length));
+                const ty = this.getScreenY(startX + dx * (arrows[i].progress + length), startY + dy * (arrows[i].progress + length));
+                
+                ctx.beginPath();
+                ctx.moveTo(sx, sy);
+                ctx.lineTo(tx, ty);
+                ctx.stroke();
+            }
+        }
+    }
+
     moveMap(arrows) {
         if(arrows.up) {
             this.screenPosY -= this.MOVE_SPEED;

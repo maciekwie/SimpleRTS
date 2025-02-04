@@ -23,14 +23,22 @@ class ArcherAnimationManager extends UnitAnimationManager {
             this.currentAnimation = this.animations[animName];
         }
         else if(this.state === ArcherAnimationState.SHOOT) {
-            const animName = "archer_shoot_" + String(this.direction).padStart(3, '0');;
-            this.currentAnimation = this.animations[animName];
+            if(this.animationFinished) {
+                const animName = "archer_shoot_" + String(this.direction).padStart(3, '0');;
+                this.currentAnimation = this.animations[animName];
+                
+                this.animationFinished = false;
+                this.currentFrame = 0;
+                this.loop = false;
+            }
         }
     }
 
     setAnimationState(state)
     {
         this.state = state;
+
+        this.loop = true;
 
         let animName = "";
         if(state === ArcherAnimationState.STAY) {
@@ -41,6 +49,8 @@ class ArcherAnimationManager extends UnitAnimationManager {
         }
         else if(state === ArcherAnimationState.SHOOT) {
             animName = "archer_shoot_" + String(this.direction).padStart(3, '0');;
+            this.loop = false;
+            this.animationFinished = false;
         } 
 
         this.currentAnimation = this.animations[animName];

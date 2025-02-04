@@ -9,15 +9,19 @@ const ArcherAction = {
 Object.freeze(ArcherAction);
 
 class Archer extends Unit {
+    static SHOOT_RATE = 1;
+    static DAMAGE = 0.1;
+
     constructor(posX, posY) {
         super(UnitType.archer, posX, posY);
 
         this.animationManager = new ArcherAnimationManager(UnitType.archer.animations);
 
         this.action = ArcherAction.IDLE;
+        this.lastShootingTime = 0;
     }
 
-    exec(deltaTime, map) {
+    exec(deltaTime, time, gameplay) {
         if(this.action === ArcherAction.SHOOT && this.targetUnit != null)
         {
             this.directionX = this.targetUnit.posX - this.posX;
@@ -25,6 +29,13 @@ class Archer extends Unit {
 
             this.animationManager.setDirection(this.directionX, this.directionY);
             this.animationManager.updateState();
+
+            if(time - this.lastShootingTime > 1 / Archer.SHOOT_RATE)
+            {
+                gameplay.shootArrow(this.posX, this.posY, this.targetUnit.posX, this.targetUnit.posY, Archer.DAMAGE);
+                this.lastShootingTime = time;
+                this.animationManager.setAnimationState(ArcherAnimationState.SHOOT);
+            }
         }
     }
 
