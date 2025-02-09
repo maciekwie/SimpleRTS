@@ -11,6 +11,13 @@ class Player {
         this.selectionStartY = 0;
         this.selectionEndX = 0;
         this.selectionEndY = 0;
+
+        this.resources = {
+            wood: 100,
+            stone: 100,
+            food: 100,
+            money: 12000
+        };
     }
 
     moveMap(arrows) {

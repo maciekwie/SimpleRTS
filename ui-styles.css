@@ -1,0 +1,25 @@
+#canvasId {
+    z-index: 1;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+#wrapper {
+    position: relative;
+}
+
+#gameUI {
+    position: absolute;
+    width: 800px;
+    height: 600px;
+    z-index: 2;
+    top: 0px;
+    left: 0px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+#resourcesBar ul {
+    color: #FFFFFF;
+    display: inline;
+}

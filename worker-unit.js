@@ -58,6 +58,8 @@ class WorkerUnit extends Unit {
                 return;
 
             this.setAction(WorkerAction.GO_CUT);
+            
+            gameplay.addWood(this.player);
 
             const path = gameplay.map.getPath(this.posX, this.posY, this.workDestX, this.workDestY);
             this.setPath(path);
@@ -69,6 +71,8 @@ class WorkerUnit extends Unit {
 
             this.setAction(WorkerAction.GO_MINE);
 
+            gameplay.addStone(this.player);
+
             const path = gameplay.map.getPath(this.posX, this.posY, this.workDestX, this.workDestY);
             this.setPath(path);
             this.setDestination(this.workDestX, this.workDestY);
@@ -78,6 +82,8 @@ class WorkerUnit extends Unit {
                 return;
 
             this.setAction(WorkerAction.GO_HARVEST);
+
+            gameplay.addFood(this.player);
             
             const path = gameplay.map.getPath(this.posX, this.posY, this.workDestX, this.workDestY);
             this.setPath(path);

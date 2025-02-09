@@ -2,8 +2,23 @@
     <head>
         <title>Simple RTS</title>
         <script src="main.js" type="module"></script>
+        <link rel="stylesheet" href="ui-styles.css" type="text/css">
     </head>
     <body>
-        <canvas id="canvasId" width="800" height="600" oncontextmenu="return false;"></canvas>
+        <div id="wrapper" oncontextmenu="return false;">
+            <canvas id="canvasId" width="800" height="600"></canvas>
+            <div id="gameUI">
+                <div id="resourcesBar">
+                    <ul>
+                        <li>Wood: <span id="woodAmount"></span></li>
+                        <li>Stone: <span id="stoneAmount"></span></li>
+                        <li>Food: <span id="foodAmount"></span></li>
+                        <li>Money: <span id="moneyAmount"></span></li>
+                    </ul>
+                </div>
+                <div id="actionsPanel">
+                </div>
+            </div>
+        </div>
     </body>
 </html>

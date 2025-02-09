@@ -41,11 +41,16 @@ class Arrow {
 class Gameplay {
     static CROPS_GROW_RATE = 0.1;
 
+    static WOOD_INCREMENT = 5;
+    static STONE_INCREMENT = 5;
+    static FOOD_INCREMENT = 5;
+
     constructor(params, loader) {
         this.assets = loader.assets;
 
         this.map = new Map(params.mapWidth, params.mapHeight, loader.assets);
 
+        this.players = [];
         this.buildings = [];
         this.units = [];
         this.growingCrops = [];
@@ -53,18 +58,22 @@ class Gameplay {
         BuildingType.houseType.image = loader.assets['house'];
         BuildingType.houseType.width = 3;
         BuildingType.houseType.height = 3;
+        BuildingType.houseType.cost = { wood: 10, stone: 5, food: 0, money: 0 };
 
         BuildingType.millType.image = loader.assets['windmill_atlas'];
         BuildingType.millType.width = 2;
         BuildingType.millType.height = 3;
+        BuildingType.millType.cost = { wood: 20, stone: 10, food: 0, money: 100 };
 
         BuildingType.storehouseType.image = loader.assets['storehouse'];
         BuildingType.storehouseType.width = 1;
         BuildingType.storehouseType.height = 3;
+        BuildingType.storehouseType.cost = { wood: 20, stone: 0, food: 0, money: 100 };
 
         BuildingType.barracksType.image = loader.assets['barracks'];;
         BuildingType.barracksType.width = 3;
         BuildingType.barracksType.height = 2;
+        BuildingType.barracksType.cost = { wood: 10, stone: 50, food: 10, money: 1000 };
 
         UnitType.worker.animations = this.assets.workerAnimations;
         UnitType.spearman.animations = this.assets.spearmanAnimations;
@@ -91,6 +100,10 @@ class Gameplay {
         }
     }
 
+    addPlayer(player) {
+        this.players.push(player);
+    }
+
     exec (deltaTime, time) {
         this.units.forEach(unit => {
             unit.move(deltaTime, this.map);
@@ -101,7 +114,7 @@ class Gameplay {
 
         for(let i = 0; i < this.growingCrops.length; i++) {
             const pos = this.growingCrops[i];
-            if(this.map.growCrops(pos.x, pos.y, this.CROPS_GROW_RATE * deltaTime)) {
+            if(this.map.growCrops(pos.x, pos.y, Gameplay.CROPS_GROW_RATE * deltaTime)) {
                 this.growingCrops.splice(i, 1);
             }
         }
@@ -261,6 +274,63 @@ class Gameplay {
         return building;
     }
 
+    addWood(playerName, amount) {
+        if(amount === undefined)
+            amount = Gameplay.WOOD_INCREMENT;
+
+        for(let player of this.players) {
+            if(player.playerName === playerName) {
+                player.resources.wood += amount;
+                break;
+            }
+        }
+
+        if(playerName == this.playerName)
+            this.updateResourcesBar();
+    }
+
+    addStone(playerName, amount) {
+        if(amount === undefined)
+            amount = Gameplay.STONE_INCREMENT;
+
+        for(let player of this.players) {
+            if(player.playerName === playerName) {
+                player.resources.stone += amount;
+                break;
+            }
+        }
+
+        if(playerName == this.playerName)
+            this.updateResourcesBar();
+    }
+
+    addFood(playerName, amount) {
+        if(amount === undefined)
+            amount = Gameplay.FOOD_INCREMENT;
+
+        for(let player of this.players) {
+            if(player.playerName === playerName) {
+                player.resources.food += amount;
+                break;
+            }
+        }
+
+        if(playerName == this.playerName)
+            this.updateResourcesBar();
+    }
+
+    addMoney(playerName, amount) {
+        for(let player of this.players) {
+            if(player.playerName === playerName) {
+                player.resources.food += amount;
+                break;
+            }
+        }
+
+        if(playerName == this.playerName)
+            this.updateResourcesBar();
+    }
+
     addBuilding(type, posX, posY, player) {
         let building = new Building(type, posX, posY);
         building.player = player;
@@ -271,6 +341,15 @@ class Gameplay {
 
         this.buildings.push(building);
         this.map.addBuilding(building);
+
+        let resources = this.players.find((item) => item.playerName === player).resources;
+        resources.wood -= type.cost.wood;
+        resources.stone -= type.cost.stone;
+        resources.food -= type.cost.food;
+        resources.money -= type.cost.money;
+
+        if(player == this.playerName)
+            this.updateResourcesBar();
     }
 
     addUnit(type, posX, posY, player) {

@@ -45,12 +45,18 @@ function main() {
         player = new Player("A", gameplay);
         aiPlayer = new AIPlayer("B", gameplay);
 
+        gameplay.addPlayer(player);
+        gameplay.addPlayer(aiPlayer);
+
         gameplay.playerName = player.playerName;
 
         gameplay.initMap();
         gameplay.addUnit(UnitType.spearman, 5, 60, aiPlayer.playerName);
         gameplay.addUnit(UnitType.spearman, 6, 60, aiPlayer.playerName);
         gameplay.addUnit(UnitType.spearman, 7, 60, aiPlayer.playerName);
+
+        updateResourcesBar();
+        gameplay.updateResourcesBar = updateResourcesBar;
 
         setEventListeners();
         requestAnimationFrame(mainLoop);
@@ -218,4 +224,11 @@ function setEventListeners() {
             player.updateSelection(x, y);
         }
     })
+}
+
+function updateResourcesBar() {
+    document.querySelector("#woodAmount").innerHTML = player.resources.wood;
+    document.querySelector("#stoneAmount").innerHTML = player.resources.stone;
+    document.querySelector("#foodAmount").innerHTML = player.resources.food;
+    document.querySelector("#moneyAmount").innerHTML = player.resources.money;
 }
