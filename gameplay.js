@@ -129,6 +129,9 @@ class Gameplay {
                 }
             }
         }
+
+        if(this.map.buildingToPlace.selectingPlace)
+            this.map.checkIfPlaceOccupied();
     }
 
     render(ctx) {
@@ -142,15 +145,41 @@ class Gameplay {
         })
     }
 
+    placeBuilding(x, y, buildingType) {
+        this.map.placeBuilding(x, y, buildingType);
+        this.buildingTypeToPlace = buildingType;
+    }
+
+    discardPlacingBuilding() {
+        this.map.discardPlacingBuilding();
+        this.buildingTypeToPlace = null;
+    }
+
+    build() {
+        if(this.map.buildingToPlace.notOccupied) {
+            this.addBuilding(this.buildingTypeToPlace, this.map.buildingToPlace.x, this.map.buildingToPlace.y, this.playerName);
+            this.map.buildingToPlace.selectingPlace = false;
+
+            return true;
+        }
+
+        return false;
+    }
+
     selectUnits(sx, sy, ex, ey, player) {
+        let selectedUnits = [];
+
         this.units.forEach(unit => {
             if(unit.player == player && isPointInSelection(sx, sy, ex, ey, unit.posX, unit.posY)) {
                 unit.selected = true;
+                selectedUnits.push(unit);
             }
             else {
                 unit.selected = false;
             }
         });
+
+        return selectedUnits;
     }
 
     moveUnitsTo(x, y) {

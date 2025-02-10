@@ -11,6 +11,7 @@ class Player {
         this.selectionStartY = 0;
         this.selectionEndX = 0;
         this.selectionEndY = 0;
+        this.selectedUnits = [];
 
         this.resources = {
             wood: 100,
@@ -78,25 +79,19 @@ class Player {
             ey = this.gameplay.map.getTileY_map(this.selectionStartX, this.selectionStartY);
         }
 
-        this.gameplay.selectUnits(sx, sy, ex, ey, this.playerName);
+        this.selectedUnits = this.gameplay.selectUnits(sx, sy, ex, ey, this.playerName);
     }
 
-    build(typeName) {
-        const posX = this.gameplay.map.checkedTileX;
-        const posY = this.gameplay.map.checkedTileY;
-        
-        if(typeName == "house") {
-            this.gameplay.addBuilding(BuildingType.houseType, posX, posY, this.playerName);
-        }
-        else if(typeName == "mill") {
-            this.gameplay.addBuilding(BuildingType.millType, posX, posY, this.playerName);
-        }
-        else if(typeName == "barracks") {
-            this.gameplay.addBuilding(BuildingType.barracksType, posX, posY, this.playerName);
-        }
-        else if(typeName == "storehouse") {
-            this.gameplay.addBuilding(BuildingType.storehouseType, posX, posY, this.playerName);
-        }
+    placeBuilding(x, y, buildingType) {
+        this.gameplay.placeBuilding(x, y, buildingType);
+    }
+
+    build() {
+       return this.gameplay.build();
+    }
+
+    discardPlacingBuilding () {
+        this.gameplay.discardPlacingBuilding();
     }
 
     addUnit(typeName) {

@@ -28,6 +28,15 @@ class Map {
 
         this.checkedTileX = 1;
         this.checkedTileY = 1;
+
+        this.buildingToPlace = {
+            selectingPlace: false,
+            notOccupied: false,
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0
+        }
     }
 
     getScreenX(i, j) {
@@ -78,119 +87,10 @@ class Map {
                 const screenX = this.getScreenX(i, j);
                 const screenY = this.getScreenY(i, j);
     
-                if(this.tiles[i][j].type == TileType.GRASS) {
-                    ctx.drawImage(assets['grass'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
-                }
-                else if(this.tiles[i][j].type == TileType.STONE) {
-                    ctx.drawImage(assets['stone'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
-                }
-                else if(this.tiles[i][j].type == TileType.TREE) {
-                    ctx.drawImage(assets['grass'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
-
-                    if(this.tiles[i][j].treeSort == 1)
-                        ctx.drawImage(assets['tree1'], screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
-                    else if(this.tiles[i][j].treeSort == 2)
-                        ctx.drawImage(assets['tree2'], screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
-                    else if(this.tiles[i][j].treeSort == 3)
-                        ctx.drawImage(assets['tree3'], screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
-                }
-                else if(this.tiles[i][j].type == TileType.GROWING_CROPS) {
-                    ctx.drawImage(assets['growing_crops_back'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - assets.cropsHeight);
-                }
-                else if(this.tiles[i][j].type == TileType.CROPS) {
-                    ctx.drawImage(assets['crops_back'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - assets.cropsHeight );
-                }
-
-                if(this.tiles[i][j].building != null) {
-                    const buildingPartX = i - this.tiles[i][j].building.posX + 1;
-                    const buildingPartY = j - this.tiles[i][j].building.posY + 1;
-                    const type = this.tiles[i][j].building.type;
-
-                    if(this.tiles[i][j].building.type === BuildingType.millType) {
-                        let frame = this.tiles[i][j].building.currentAnimation.frames[this.tiles[i][j].building.currentFrame];
-
-                        let frontSlice = type.height - buildingPartY;
-                        let sideSlice = type.width - buildingPartX;
-    
-                        if(buildingPartX == type.width)
-                        {
-                            const sx = frame.x + frontSlice * (this.TILE_WIDTH / 2) + this.TILE_WIDTH / 2 + (type.width - 1) * (this.TILE_WIDTH / 2);
-                            const sy = frame.y;
-                            const sw = this.TILE_WIDTH / 2;
-                            const sh = frame.height;
-                            const dx = screenX;
-                            const dy = screenY - frame.height + frontSlice * (this.TILE_HEIGHT / 2) + this.TILE_HEIGHT / 2;;
-                            ctx.drawImage(type.image, sx, sy, sw, sh, dx, dy, this.TILE_WIDTH / 2, frame.height);
-                        }
-                        if(buildingPartY == type.height)
-                        {
-                            const sx = frame.x + (type.width - 1) * (this.TILE_WIDTH / 2)- sideSlice * (this.TILE_WIDTH / 2);
-                            const sy = frame.y;
-                            const sw = this.TILE_WIDTH / 2;
-                            const sh = frame.height;
-                            const dx = screenX - this.TILE_WIDTH / 2;
-                            const dy = screenY - frame.height + sideSlice * (this.TILE_HEIGHT / 2) + this.TILE_HEIGHT / 2;
-                            ctx.drawImage(type.image, sx, sy, sw, sh, dx, dy, this.TILE_WIDTH / 2, frame.height);
-                        }
-                    }
-                    else {
-                        let frontSlice = type.height - buildingPartY;
-                        let sideSlice = type.width - buildingPartX;
-
-                        if(buildingPartX == type.width)
-                        {
-                            const sx = frontSlice * (this.TILE_WIDTH / 2) + this.TILE_WIDTH / 2 + (type.width - 1) * (this.TILE_WIDTH / 2);
-                            const sy = 0;
-                            const sw = this.TILE_WIDTH / 2;
-                            const sh = type.image.height;
-                            const dx = screenX;
-                            const dy = screenY - type.image.height + frontSlice * (this.TILE_HEIGHT / 2) + this.TILE_HEIGHT / 2;;
-                            ctx.drawImage(type.image, sx, sy, sw, sh, dx, dy, this.TILE_WIDTH / 2, type.image.height);
-                        }
-                        if(buildingPartY == type.height)
-                        {
-                            const sx = (type.width - 1) * (this.TILE_WIDTH / 2)- sideSlice * (this.TILE_WIDTH / 2);
-                            const sy = 0;
-                            const sw = this.TILE_WIDTH / 2;
-                            const sh = type.image.height;
-                            const dx = screenX - this.TILE_WIDTH / 2;
-                            const dy = screenY - type.image.height + sideSlice * (this.TILE_HEIGHT / 2) + this.TILE_HEIGHT / 2;
-                            ctx.drawImage(type.image, sx, sy, sw, sh, dx, dy, this.TILE_WIDTH / 2, type.image.height);
-                        }
-                    }
-                }
-
-                this.tiles[i][j].units.forEach(unit => {
-                    let frame = unit.animationManager.currentAnimation.frames[unit.animationManager.currentFrame];
-
-                    let x = screenX - frame.width / 2;
-                    let y = screenY - frame.height / 2 - this.TILE_HEIGHT / 2;
-
-                    if(unit.moveState == MoveState.MOVE_OUT) {
-                        const dx = unit.getDirectionX();
-                        const dy = unit.getDirectionY();
-
-                        x += -unit.moveProgress * dx * this.TILE_WIDTH / 4 + unit.moveProgress * dy * this.TILE_WIDTH / 4;
-                        y += unit.moveProgress * dx * this.TILE_HEIGHT / 4 + unit.moveProgress * dy * this.TILE_HEIGHT / 4;
-                    }
-                    else if(unit.moveState == MoveState.MOVE_IN) {
-                        const dx = -unit.getDirectionX();
-                        const dy = -unit.getDirectionY();
-                        
-                        x += -(1 - unit.moveProgress) * dx * this.TILE_WIDTH / 4 + (1 - unit.moveProgress)  * dy * this.TILE_WIDTH / 4;
-                        y += (1 - unit.moveProgress) * dx * this.TILE_HEIGHT / 4 + (1 - unit.moveProgress) * dy * this.TILE_HEIGHT / 4;
- 
-                    }
-
-                    ctx.drawImage(unit.animationManager.atlasImage, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
-                });
-
-                if(this.tiles[i][j].type == TileType.GROWING_CROPS) {
-                    ctx.drawImage(assets['growing_crops_front'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - assets.cropsHeight );
-                }
-                else if(this.tiles[i][j].type == TileType.CROPS) {
-                    ctx.drawImage(assets['crops_front'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - assets.cropsHeight );
-                }
+                this.renderTerrainBack(ctx, screenX, screenY, this.tiles[i][j]);
+                this.renderBuildings(ctx, screenX, screenY, this.tiles[i][j], i, j);
+                this.renderUnits(ctx, screenX, screenY, this.tiles[i][j]);
+                this.renderTerrainFront(ctx, screenX, screenY, this.tiles[i][j]);
             }
         }
 
@@ -230,6 +130,162 @@ class Map {
         ctx.lineTo(screenX, screenY + this.TILE_HEIGHT / 2);
         ctx.lineTo(screenX - this.TILE_WIDTH / 2, screenY);
         ctx.stroke();
+
+        if(this.buildingToPlace.selectingPlace) {
+            if(this.buildingToPlace.notOccupied) {
+                ctx.strokeStyle = "blue";
+            }
+            else {
+                ctx.strokeStyle = "red";
+            }
+
+            for(let i = 0; i < this.buildingToPlace.width; i++) {
+                for(let j = 0; j < this.buildingToPlace.height; j++) {
+                    const tileX = this.buildingToPlace.x + i;
+                    const tileY = this.buildingToPlace.y + j;
+                    const screenX = this.getScreenX(tileX, tileY);
+                    const screenY = this.getScreenY(tileX, tileY);
+
+                    ctx.beginPath();
+                    ctx.moveTo(screenX - this.TILE_WIDTH / 2, screenY);
+                    ctx.lineTo(screenX, screenY - this.TILE_HEIGHT / 2);
+                    ctx.lineTo(screenX + this.TILE_WIDTH / 2, screenY);
+                    ctx.lineTo(screenX, screenY + this.TILE_HEIGHT / 2);
+                    ctx.lineTo(screenX - this.TILE_WIDTH / 2, screenY);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    renderTerrainBack(ctx, screenX, screenY, tile) {
+        const assets = this.assets;
+
+        if(tile.type == TileType.GRASS) {
+            ctx.drawImage(assets['grass'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
+        }
+        else if(tile.type == TileType.STONE) {
+            ctx.drawImage(assets['stone'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
+        }
+        else if(tile.type == TileType.TREE) {
+            ctx.drawImage(assets['grass'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2);
+
+            if(tile.treeSort == 1)
+                ctx.drawImage(assets['tree1'], screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+            else if(tile.treeSort == 2)
+                ctx.drawImage(assets['tree2'], screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+            else if(tile.treeSort == 3)
+                ctx.drawImage(assets['tree3'], screenX - this.TILE_WIDTH, screenY - this.TILE_HEIGHT * 3);
+        }
+        else if(tile.type == TileType.GROWING_CROPS) {
+            ctx.drawImage(assets['growing_crops_back'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - assets.cropsHeight);
+        }
+        else if(tile.type == TileType.CROPS) {
+            ctx.drawImage(assets['crops_back'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - assets.cropsHeight );
+        }
+    }
+
+    renderTerrainFront(ctx, screenX, screenY, tile) {
+        const assets = this.assets;
+
+        if(tile.type == TileType.GROWING_CROPS) {
+            ctx.drawImage(assets['growing_crops_front'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - assets.cropsHeight );
+        }
+        else if(tile.type == TileType.CROPS) {
+            ctx.drawImage(assets['crops_front'], screenX - this.TILE_WIDTH / 2, screenY - this.TILE_HEIGHT / 2 - assets.cropsHeight );
+        }
+    }
+
+    renderBuildings(ctx, screenX, screenY, tile, i, j) {
+        const assets = this.assets;
+
+        if(tile.building != null) {
+            const buildingPartX = i - tile.building.posX + 1;
+            const buildingPartY = j - tile.building.posY + 1;
+            const type = tile.building.type;
+
+            if(tile.building.type === BuildingType.millType) {
+                let frame = tile.building.currentAnimation.frames[tile.building.currentFrame];
+
+                let frontSlice = type.height - buildingPartY;
+                let sideSlice = type.width - buildingPartX;
+
+                if(buildingPartX == type.width)
+                {
+                    const sx = frame.x + frontSlice * (this.TILE_WIDTH / 2) + this.TILE_WIDTH / 2 + (type.width - 1) * (this.TILE_WIDTH / 2);
+                    const sy = frame.y;
+                    const sw = this.TILE_WIDTH / 2;
+                    const sh = frame.height;
+                    const dx = screenX;
+                    const dy = screenY - frame.height + frontSlice * (this.TILE_HEIGHT / 2) + this.TILE_HEIGHT / 2;;
+                    ctx.drawImage(type.image, sx, sy, sw, sh, dx, dy, this.TILE_WIDTH / 2, frame.height);
+                }
+                if(buildingPartY == type.height)
+                {
+                    const sx = frame.x + (type.width - 1) * (this.TILE_WIDTH / 2)- sideSlice * (this.TILE_WIDTH / 2);
+                    const sy = frame.y;
+                    const sw = this.TILE_WIDTH / 2;
+                    const sh = frame.height;
+                    const dx = screenX - this.TILE_WIDTH / 2;
+                    const dy = screenY - frame.height + sideSlice * (this.TILE_HEIGHT / 2) + this.TILE_HEIGHT / 2;
+                    ctx.drawImage(type.image, sx, sy, sw, sh, dx, dy, this.TILE_WIDTH / 2, frame.height);
+                }
+            }
+            else {
+                let frontSlice = type.height - buildingPartY;
+                let sideSlice = type.width - buildingPartX;
+
+                if(buildingPartX == type.width)
+                {
+                    const sx = frontSlice * (this.TILE_WIDTH / 2) + this.TILE_WIDTH / 2 + (type.width - 1) * (this.TILE_WIDTH / 2);
+                    const sy = 0;
+                    const sw = this.TILE_WIDTH / 2;
+                    const sh = type.image.height;
+                    const dx = screenX;
+                    const dy = screenY - type.image.height + frontSlice * (this.TILE_HEIGHT / 2) + this.TILE_HEIGHT / 2;;
+                    ctx.drawImage(type.image, sx, sy, sw, sh, dx, dy, this.TILE_WIDTH / 2, type.image.height);
+                }
+                if(buildingPartY == type.height)
+                {
+                    const sx = (type.width - 1) * (this.TILE_WIDTH / 2)- sideSlice * (this.TILE_WIDTH / 2);
+                    const sy = 0;
+                    const sw = this.TILE_WIDTH / 2;
+                    const sh = type.image.height;
+                    const dx = screenX - this.TILE_WIDTH / 2;
+                    const dy = screenY - type.image.height + sideSlice * (this.TILE_HEIGHT / 2) + this.TILE_HEIGHT / 2;
+                    ctx.drawImage(type.image, sx, sy, sw, sh, dx, dy, this.TILE_WIDTH / 2, type.image.height);
+                }
+            }
+        }
+    }
+
+    renderUnits(ctx, screenX, screenY, tile) {
+        const assets = this.assets;
+
+        tile.units.forEach(unit => {
+            let frame = unit.animationManager.currentAnimation.frames[unit.animationManager.currentFrame];
+
+            let x = screenX - frame.width / 2;
+            let y = screenY - frame.height / 2 - this.TILE_HEIGHT / 2;
+
+            if(unit.moveState == MoveState.MOVE_OUT) {
+                const dx = unit.getDirectionX();
+                const dy = unit.getDirectionY();
+
+                x += -unit.moveProgress * dx * this.TILE_WIDTH / 4 + unit.moveProgress * dy * this.TILE_WIDTH / 4;
+                y += unit.moveProgress * dx * this.TILE_HEIGHT / 4 + unit.moveProgress * dy * this.TILE_HEIGHT / 4;
+            }
+            else if(unit.moveState == MoveState.MOVE_IN) {
+                const dx = -unit.getDirectionX();
+                const dy = -unit.getDirectionY();
+                
+                x += -(1 - unit.moveProgress) * dx * this.TILE_WIDTH / 4 + (1 - unit.moveProgress)  * dy * this.TILE_WIDTH / 4;
+                y += (1 - unit.moveProgress) * dx * this.TILE_HEIGHT / 4 + (1 - unit.moveProgress) * dy * this.TILE_HEIGHT / 4;
+
+            }
+
+            ctx.drawImage(unit.animationManager.atlasImage, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
+        });
     }
 
     renderArrows(ctx, arrows) {
@@ -289,33 +345,60 @@ class Map {
         }
     }
 
-    addUnit(unit)
-    {
+    addUnit(unit) {
         const i = unit.posX;
         const j = unit.posY;
 
         this.tiles[i][j].units.push(unit);
     }
 
-    placeTree(x, y)
-    {
+    placeBuilding(screenX, screenY, buildingType) {
+        this.buildingToPlace.x = this.getTileX(screenX, screenY);
+        this.buildingToPlace.y = this.getTileY(screenX, screenY);
+        this.buildingToPlace.width = buildingType.width;
+        this.buildingToPlace.height = buildingType.height;
+
+        this.buildingToPlace.selectingPlace = true;
+    }
+
+    discardPlacingBuilding() {
+        this.buildingToPlace.selectingPlace = false;
+    }
+
+    checkIfPlaceOccupied() {
+        for(let i = 0; i < this.buildingToPlace.width; i++) {
+            for(let j = 0; j < this.buildingToPlace.height; j++) {
+                const tileX = this.buildingToPlace.x + i;
+                const tileY = this.buildingToPlace.y + j;
+
+                if(this.tiles[tileX][tileY].type != TileType.GRASS ||
+                    this.tiles[tileX][tileY].occupied ||
+                    this.tiles[tileX][tileY].units.length != 0) {
+                    this.buildingToPlace.notOccupied = false;
+
+                    return;
+                }
+            }
+        }
+
+        this.buildingToPlace.notOccupied = true;
+    }
+
+    placeTree(x, y) {
         this.tiles[x][y].type = TileType.TREE;
         this.tiles[x][y].treeSort = Math.round(1 + Math.random() * 2);
     }
 
-    placeStone(x, y)
-    {
+    placeStone(x, y) {
         this.tiles[x][y].type = TileType.STONE;
     }
 
-    plantCrops(x, y)
-    {
+    plantCrops(x, y)  {
         this.tiles[x][y].type = TileType.GROWING_CROPS;
         this.tiles[x][y].status = 0;
     }
 
-    growCrops(x, y, growRate)
-    {
+    growCrops(x, y, growRate)  {
         if(this.tiles[x][y].type != TileType.GROWING_CROPS)
             return false;
 
@@ -331,8 +414,7 @@ class Map {
         return false;
     }
 
-    moveUnitToTile(unit, x, y)
-    {
+    moveUnitToTile(unit, x, y) {
         const index = this.tiles[unit.posX][unit.posY].units.indexOf(unit);
         this.tiles[unit.posX][unit.posY].units.splice(index, 1);
         this.tiles[x][y].units.push(unit);
@@ -355,8 +437,7 @@ class Map {
         }
     }
 
-    getPath(startRow, startCol, endRow, endCol)
-    {
+    getPath(startRow, startCol, endRow, endCol) {
         const numRows = this.tiles.length;
         const numCols = this.tiles[0].length;
 

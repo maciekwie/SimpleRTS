@@ -3,6 +3,7 @@ import { AssetLoader, setAnimations } from './asset-loader.js';
 import { Player } from './player.js'
 import { AIPlayer } from './AIPlayer.js';
 import { UnitType } from './unit.js';
+import { BuildingType } from './building.js';
 
 const SCREEN_WIDTH = 800;
 const SCREEN_HEIGHT = 600;
@@ -17,6 +18,7 @@ let arrows = {
 };
 
 let selecting = false;
+let placeBuildingType = null;
 
 let loader;
 
@@ -157,16 +159,16 @@ function setEventListeners() {
             arrows.right = false;
         }
         else if (keyName == "h") {
-            player.build("house");
+            placeBuildingType = BuildingType.houseType;
         }
         else if (keyName == "b") {
-            player.build("barracks");
+            placeBuildingType = BuildingType.barracksType;
         }
         else if (keyName == "s") {
-            player.build("storehouse");
+            placeBuildingType = BuildingType.storehouseType;
         }
         else if (keyName == "m") {
-            player.build("mill");
+            placeBuildingType = BuildingType.millAnimations;
         }
         else if (keyName == "w") {
             player.addUnit("worker");
@@ -191,6 +193,10 @@ function setEventListeners() {
                 selecting = true;
                 player.beginSelection(x, y);
             }
+
+            if(placeBuildingType != null) {
+                gameplay.build();
+            }
         }
         else if(event.button == 2) {
 
@@ -209,9 +215,19 @@ function setEventListeners() {
                 selecting = false;
                 player.endSelection();
             }
+
+            if(placeBuildingType != null) {
+                if(player.build())
+                    placeBuildingType = null;
+            }
         }
         else if(event.button == 2) {
             player.moveUnitsTo(x, y);
+
+            if(placeBuildingType != null) {
+                player.discardPlacingBuilding();
+                placeBuildingType = null;
+            }
         }
     })
 
@@ -222,8 +238,30 @@ function setEventListeners() {
         if(selecting)
         {
             player.updateSelection(x, y);
+
+            updateUnitsPanel();
+        }
+
+        if(placeBuildingType != null) {
+            player.placeBuilding(x, y, placeBuildingType);
         }
     })
+
+    document.querySelector("#buildHouseButton").addEventListener("click", (event) => {
+        placeBuildingType = BuildingType.houseType;
+    });
+
+    document.querySelector("#buildSorehouseButton").addEventListener("click", (event) => {
+        placeBuildingType = BuildingType.storehouseType;
+    });
+
+    document.querySelector("#buildMillButton").addEventListener("click", (event) => {
+        placeBuildingType = BuildingType.millType;
+    });
+
+    document.querySelector("#buildBarracksButton").addEventListener("click", (event) => {
+        placeBuildingType = BuildingType.barracksType;
+    });
 }
 
 function updateResourcesBar() {
@@ -231,4 +269,36 @@ function updateResourcesBar() {
     document.querySelector("#stoneAmount").innerHTML = player.resources.stone;
     document.querySelector("#foodAmount").innerHTML = player.resources.food;
     document.querySelector("#moneyAmount").innerHTML = player.resources.money;
+}
+
+function updateUnitsPanel() {
+    if(player.selectedUnits.length == 0)
+    {
+        document.querySelector("#unitsPanel").style.display = "none";
+        document.querySelector("#buildPanel").style.display = "block";
+        return;
+    }
+    
+    document.querySelector("#unitsPanel").style.display = "block";
+    document.querySelector("#buildPanel").style.display = "none";
+    document.querySelector("#selectedUnitsNumber").innerHTML = player.selectedUnits.length;
+
+    let selectedWorkers = 0;
+    let selectedSpearmen = 0;
+    let selectedArchers = 0;
+    for(let unit of player.selectedUnits) {
+        if(unit.type === UnitType.worker) {
+            selectedWorkers++;
+        }
+        else  if(unit.type === UnitType.spearman) {
+            selectedSpearmen++;
+        }
+        else if(unit.type === UnitType.archer) {
+            selectedArchers++;
+        }
+    }
+
+    document.querySelector("#selectedWorkersNumber").innerHTML = selectedWorkers;
+    document.querySelector("#selectedSpearmenNumber").innerHTML = selectedSpearmen;
+    document.querySelector("#selectedArchersNumber").innerHTML = selectedArchers;
 }

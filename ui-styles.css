@@ -23,3 +23,32 @@
     color: #FFFFFF;
     display: inline;
 }
+
+.button {
+    padding: 5 5 5 10px;
+    background-color: #5a76dc;
+}
+
+.button:hover {
+    padding: 5 5 5 10px;
+    background-color: #718ae4;
+}
+
+.button:active {
+    padding: 5 5 5 10px;
+    background-color: #2f3e72;
+}
+
+#actionsPanel {
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(122, 111, 175, 0.399)
+}
+
+#unitsPanel {
+    display: none;
+}
+
+#buildPanel ul {
+    max-width: 180px;
+}
