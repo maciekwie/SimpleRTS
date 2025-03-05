@@ -5,6 +5,7 @@ class UnitType {
     constructor(name) {
         this.name = name;
         this.speed = 2;
+        this.recruitTime = 3;
     }
 }
 

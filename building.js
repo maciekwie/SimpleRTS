@@ -17,6 +17,9 @@ class Building extends GameObject {
 
         this.type = type;
 
+        this.recruitQueue = [];
+        this.recruitProgress = 0;
+
         this.player = "";
 
         this.image = null;
@@ -25,6 +28,27 @@ class Building extends GameObject {
 
         this.currentFrame = 0;
         this.currentAnimation = null; 
+    }
+
+    exec(deltaTime, time, gameplay) {
+        if(this.recruitQueue.length > 0) {
+            const type = this.recruitQueue[0];
+
+            if(this.recruitProgress < 1) {
+               
+                this.recruitProgress += deltaTime / type.recruitTime;
+            }
+            else {
+                gameplay.addUnit(type, this.posX - 1, this.posY - 1, this.player);
+
+                this.recruitProgress = 0;
+                this.recruitQueue.splice(0, 1);
+            }
+        }
+    }
+
+    addToQueue(unitType) {
+        this.recruitQueue.push(unitType);
     }
 
     nextFrame()

@@ -23,12 +23,15 @@ class WorkerAnimationManager extends UnitAnimationManager {
         if(this.state === WorkerAnimationState.WALK) {
             const animName = "worker_walk_" + String(this.direction).padStart(3, '0');;
             this.currentAnimation = this.animations[animName];
+            this.loop = true;
         }
     }
 
     setAnimationState(state)
     {
         this.state = state;
+
+        this.loop = true;
 
         let animName = "";
         if(state === WorkerAnimationState.STAY) {

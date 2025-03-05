@@ -6,7 +6,6 @@
     </head>
     <body>
         <div id="wrapper" oncontextmenu="return false;">
-            <canvas id="canvasId" width="800" height="600"></canvas>
             <div id="gameUI">
                 <div id="resourcesBar">
                     <ul>
@@ -17,25 +16,62 @@
                     </ul>
                 </div>
                 <div id="actionsPanel">
-                    <diu id="buildPanel">
+                    <diu class="optionGroup" id="buildPanel">
                         <div>Build: </div>
                         <ul>
                             <li><a class="button" id="buildHouseButton">house</a></li>
                             <li><a class="button" id="buildSorehouseButton">storehouse</a></li>
                             <li><a class="button" id="buildMillButton">mill</a></li>
                             <li><a class="button" id="buildBarracksButton">barracks</a></li>
-                        </ul>
+                        </ul>                                                       
                     </diu>
-                    <div id="unitsPanel">
+                    <div  class="optionGroup" id="unitsPanel">
                         <div>Selected units: <span id="selectedUnitsNumber"></span></div>
                         <div>workers: <span id="selectedWorkersNumber"></span></div>
                         <div>spearmen: <span id="selectedSpearmenNumber"></span></div>
                         <div>archers: <span id="selectedArchersNumber"></span></div>
                     </div>
-                    <div id="selectedBuildinPanel">
+                    <div class="optionGroup" id="selectedBuildingPanel">
+                        <div class="optionGroup" id="houseOptions">
+                            <div>House</div>
+                            <div id="houseRecruitProgress"></div>
+                            <div>
+                                recruit:
+                                <ul>
+                                    <li>
+                                        <div id="workersInQueue"></div>
+                                        <button class="button" id="recruitWorkerButton">worker</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="optionGroup" id="storehouseOptions">
+                            <div>Storehouse</div>
+                        </div>
+                        <div class="optionGroup" id="barracksOptions">
+                            <div>Barracks</div>
+                            <div id="barracksRecruitProgress"></div>
+                            <div>
+                                recruit:
+                                <ul>
+                                    <li>
+                                        <div id="spearmenInQueue"></div>
+                                        <button class="button" id="recruitSpearmanButton">spearman</button>
+                                    </li>
+                                    <li>
+                                        <div id="archersInQueue"></div>
+                                        <button class="button" id="recruitArcherButton">archer</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="optionGroup" id="millOptions">
+                            <div>Mill</div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <canvas id="canvasId" width="800" height="600"></canvas>
         </div>
     </body>
 </html>

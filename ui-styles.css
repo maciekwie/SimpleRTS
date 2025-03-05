@@ -11,6 +11,8 @@
 
 #gameUI {
     position: absolute;
+    pointer-events: none;
+    user-select: none;
     width: 800px;
     height: 600px;
     z-index: 2;
@@ -19,9 +21,21 @@
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
+#gameUI * {
+    pointer-events: all;
+}
+
+#resourcesBar {
+    width: fit-content;
+}
+
 #resourcesBar ul {
     color: #FFFFFF;
     display: inline;
+}
+
+.optionGroup {
+    display: none;
 }
 
 .button {

@@ -75,8 +75,13 @@ class Gameplay {
         BuildingType.barracksType.height = 2;
         BuildingType.barracksType.cost = { wood: 10, stone: 50, food: 10, money: 1000 };
 
+        UnitType.worker.cost = { wood: 0, stone: 0, food: 10, money: 0 };
         UnitType.worker.animations = this.assets.workerAnimations;
+
+        UnitType.spearman.cost = { wood: 10, stone: 5, food: 20, money: 10 };
         UnitType.spearman.animations = this.assets.spearmanAnimations;
+
+        UnitType.archer.cost = { wood: 20, stone: 0, food: 20, money: 12 };
         UnitType.archer.animations = this.assets.archerAnimations;
 
         this.arrows = [];
@@ -110,6 +115,12 @@ class Gameplay {
             unit.exec(deltaTime, time, this);
             
             unit.nextFrame();
+        });
+
+        this.buildings.forEach(building => {
+            building.exec(deltaTime, time, this);
+            
+            //building.nextFrame();
         });
 
         for(let i = 0; i < this.growingCrops.length; i++) {
@@ -401,6 +412,17 @@ class Gameplay {
 
         this.units.push(unit);
         this.map.addUnit(unit);
+    }
+
+    subtractUnitCost(type, player) {
+        let resources = this.players.find((item) => item.playerName === player).resources;
+        resources.wood -= type.cost.wood;
+        resources.stone -= type.cost.stone;
+        resources.food -= type.cost.food;
+        resources.money -= type.cost.money;
+
+        if(player == this.playerName)
+            this.updateResourcesBar();
     }
 
     plantCrops(posX, posY) {

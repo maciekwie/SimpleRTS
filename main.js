@@ -93,6 +93,10 @@ function main() {
         if(selecting)
             player.drawSelectionRect(ctx);
 
+        if(player.selectedBuilding != null) {
+            updateBuildingPanel();
+        }
+
 
         requestAnimationFrame(mainLoop);
     }
@@ -184,7 +188,9 @@ function setEventListeners() {
         }
     });
 
-    document.addEventListener("mousedown", (event) => {
+    let canvasElement = document.querySelector("#canvasId");
+
+    canvasElement.addEventListener("mousedown", (event) => {
         const x = event.x;
         const y = event.y;
 
@@ -203,7 +209,7 @@ function setEventListeners() {
         }
     });
 
-    document.addEventListener("mouseup", (event) => {
+    canvasElement.addEventListener("mouseup", (event) => {
         const x = event.x;
         const y = event.y;
 
@@ -214,6 +220,17 @@ function setEventListeners() {
             {
                 selecting = false;
                 player.endSelection();
+
+                if(player.selectedBuilding != null) {
+                    for(let element of document.querySelectorAll("#actionsPanel .optionGroup"))
+                    {
+                        element.style.display = "none";
+                    }
+
+                    document.querySelector("#selectedBuildingPanel").style.display = "block";
+
+                    updateBuildingPanel();
+                }
             }
 
             if(placeBuildingType != null) {
@@ -231,7 +248,7 @@ function setEventListeners() {
         }
     })
 
-    document.addEventListener("mousemove", (event) => {
+    canvasElement.addEventListener("mousemove", (event) => {
         const x = event.x;
         const y = event.y;
 
@@ -262,6 +279,26 @@ function setEventListeners() {
     document.querySelector("#buildBarracksButton").addEventListener("click", (event) => {
         placeBuildingType = BuildingType.barracksType;
     });
+
+    document.querySelector("#recruitWorkerButton").addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        if(player.selectedBuilding != null && player.selectedBuilding.type === BuildingType.houseType) {
+            player.recruit(player.selectedBuilding, UnitType.worker);
+        }
+    });
+
+    document.querySelector("#recruitSpearmanButton").addEventListener("click", (event) => {
+        if(player.selectedBuilding != null && player.selectedBuilding.type === BuildingType.barracksType) {
+            player.recruit(player.selectedBuilding, UnitType.spearman);
+        }
+    });
+
+    document.querySelector("#recruitArcherButton").addEventListener("click", (event) => {
+        if(player.selectedBuilding != null && player.selectedBuilding.type === BuildingType.barracksType) {
+            player.recruit(player.selectedBuilding, UnitType.archer);
+        }
+    });
 }
 
 function updateResourcesBar() {
@@ -272,15 +309,18 @@ function updateResourcesBar() {
 }
 
 function updateUnitsPanel() {
+    for(let element of document.querySelectorAll("#actionsPanel .optionGroup"))
+    {
+        element.style.display = "none";
+    }
+
     if(player.selectedUnits.length == 0)
     {
-        document.querySelector("#unitsPanel").style.display = "none";
         document.querySelector("#buildPanel").style.display = "block";
         return;
     }
     
     document.querySelector("#unitsPanel").style.display = "block";
-    document.querySelector("#buildPanel").style.display = "none";
     document.querySelector("#selectedUnitsNumber").innerHTML = player.selectedUnits.length;
 
     let selectedWorkers = 0;
@@ -301,4 +341,53 @@ function updateUnitsPanel() {
     document.querySelector("#selectedWorkersNumber").innerHTML = selectedWorkers;
     document.querySelector("#selectedSpearmenNumber").innerHTML = selectedSpearmen;
     document.querySelector("#selectedArchersNumber").innerHTML = selectedArchers;
+}
+
+function updateBuildingPanel() {
+    for(let element of document.querySelectorAll("#selectedBuildingPanel .optionGroup"))
+    {
+        element.style.display = "none";
+    }
+
+    if(player.selectedBuilding.type === BuildingType.houseType) {
+        document.querySelector("#houseOptions").style.display = "block";
+
+        document.querySelector("#houseRecruitProgress").innerHTML = player.selectedBuilding.recruitProgress * 100 + "%";
+
+        let workersInQueue = 0;
+
+        for(let type of player.selectedBuilding.recruitQueue) {
+            if(type === UnitType.worker) {
+                workersInQueue++;
+            }
+        }
+
+        document.querySelector("#workersInQueue").innerHTML = workersInQueue;
+    }
+    else if(player.selectedBuilding.type === BuildingType.storehouseType) {
+        document.querySelector("#storehouseOptions").style.display = "block";
+    }
+    else if(player.selectedBuilding.type === BuildingType.barracksType) {
+        document.querySelector("#barracksOptions").style.display = "block";
+
+        document.querySelector("#barracksRecruitProgress").innerHTML = player.selectedBuilding.recruitProgress * 100 + "%";
+
+        let spearmenInQueue = 0;
+        let archersInQueue = 0;
+
+        for(let type of player.selectedBuilding.recruitQueue) {
+            if(type === UnitType.spearman) {
+                spearmenInQueue++;
+            }
+            else if(type === UnitType.archer) {
+                archersInQueue++;
+            }
+        }
+
+        document.querySelector("#spearmenInQueue").innerHTML = spearmenInQueue;
+        document.querySelector("#archersInQueue").innerHTML = archersInQueue;
+    }
+    else if(player.selectedBuilding.type === BuildingType.millType) {
+        document.querySelector("#millOptions").style.display = "block";
+    }
 }

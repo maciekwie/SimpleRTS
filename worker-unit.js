@@ -51,7 +51,7 @@ class WorkerUnit extends Unit {
         }
         else if(this.action === WorkerAction.GO_TO_DEST)  {
             this.SetAction(WorkerAction.IDLE);
-            this.animationManager.setAnimationState(WorkerAnimationState.STAY);
+            this.animationManager.setAnimationState(WorkerAnimationState.WALK);
         }
         else if(this.action === WorkerAction.RETURN_WITH_WOOD) {
             if(this.posX != this.destinationX || this.posY != this.destinationY)
@@ -154,6 +154,9 @@ class WorkerUnit extends Unit {
 
             this.workDestX = this.posX;
             this.workDestY = this.posY;
+        }
+        else {
+            this.animationManager.setAnimationState(WorkerAnimationState.STAY);
         }
     }
 }

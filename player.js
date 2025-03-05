@@ -12,6 +12,7 @@ class Player {
         this.selectionEndX = 0;
         this.selectionEndY = 0;
         this.selectedUnits = [];
+        this.selectedBuilding = null;
 
         this.resources = {
             wood: 100,
@@ -42,6 +43,10 @@ class Player {
         
         this.selectionStartX = x + screenPosX;
         this.selectionStartY = y + screenPosY;
+        this.selectionEndX = x + screenPosX;
+        this.selectionEndY = y + screenPosY;
+
+        this.selectedBuilding = null;
     }
 
     updateSelection(x, y)  {
@@ -55,7 +60,12 @@ class Player {
     }
 
     endSelection() {
-
+        if(this.selectedUnits.length === 0) {
+            this.selectBuilding(this.selectionEndX, this.selectionEndY);
+        }
+        else {
+            this.selectedBuilding = null;
+        }
     }
 
     selectUnits() {
@@ -82,6 +92,19 @@ class Player {
         this.selectedUnits = this.gameplay.selectUnits(sx, sy, ex, ey, this.playerName);
     }
 
+    selectBuilding(x, y) {
+        const tileX = this.gameplay.map.getTileX_map(x, y);
+        const tileY = this.gameplay.map.getTileY_map(x, y);
+
+        if(this.gameplay.map.tiles[tileX][tileY].building != null &&
+            this.gameplay.map.tiles[tileX][tileY].building.player === this.playerName) {
+            this.selectedBuilding = this.gameplay.map.tiles[tileX][tileY].building;
+        }
+        else {
+            this.selectedBuilding = null;
+        }
+    }
+
     placeBuilding(x, y, buildingType) {
         this.gameplay.placeBuilding(x, y, buildingType);
     }
@@ -92,6 +115,12 @@ class Player {
 
     discardPlacingBuilding () {
         this.gameplay.discardPlacingBuilding();
+    }
+
+    recruit(building, unitType) {
+        building.addToQueue(unitType);
+
+        this.gameplay.subtractUnitCost(unitType, this.playerName);
     }
 
     addUnit(typeName) {
