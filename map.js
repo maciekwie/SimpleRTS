@@ -47,6 +47,14 @@ class Map {
         return (j - 1) * this.TILE_HEIGHT / 2 - this.width * this.TILE_HEIGHT / 2 + i * this.TILE_HEIGHT / 2 - this.screenPosY;
     }
 
+    getScreenX_map(i, j) {
+        return this.TILE_WIDTH * i / 2 + this.height * this.TILE_WIDTH / 2 - j * this.TILE_WIDTH / 2;
+    }
+
+    getScreenY_map(i, j) {
+        return (j - 1) * this.TILE_HEIGHT / 2 - this.width * this.TILE_HEIGHT / 2 + i * this.TILE_HEIGHT / 2;
+    }
+
     getTileX(screenX, screenY) {
         const s1 = screenX + this.screenPosX - (this.height * this.TILE_WIDTH) / 2;
         const s2 = screenY + this.screenPosY + (this.width * this.TILE_HEIGHT) / 2;

@@ -4,6 +4,7 @@ import { Player } from './player.js'
 import { AIPlayer } from './AIPlayer.js';
 import { UnitType } from './unit.js';
 import { BuildingType } from './building.js';
+import { Minimap } from './minimap.js';
 
 const SCREEN_WIDTH = 800;
 const SCREEN_HEIGHT = 600;
@@ -25,6 +26,8 @@ let loader;
 let gameplay;
 let player;
 let aiPlayer;
+
+let minimap;
 
 main();
 
@@ -56,6 +59,11 @@ function main() {
         gameplay.addUnit(UnitType.spearman, 5, 60, aiPlayer.playerName);
         gameplay.addUnit(UnitType.spearman, 6, 60, aiPlayer.playerName);
         gameplay.addUnit(UnitType.spearman, 7, 60, aiPlayer.playerName);
+
+        let minimapCanvas = document.querySelector("#minimapCanvas");
+        minimap = new Minimap(player, gameplay, minimapCanvas);
+        minimap.setPlayerColor("A", "#FF0000");
+        minimap.setPlayerColor("B", "#0000FF");
 
         updateResourcesBar();
         gameplay.updateResourcesBar = updateResourcesBar;
@@ -97,6 +105,7 @@ function main() {
             updateBuildingPanel();
         }
 
+        minimap.render();
 
         requestAnimationFrame(mainLoop);
     }
@@ -263,6 +272,11 @@ function setEventListeners() {
             player.placeBuilding(x, y, placeBuildingType);
         }
     })
+
+    let minimapCanvas = document.querySelector("#minimapCanvas");
+    minimapCanvas.addEventListener("mousedown", (event) => {
+        minimap.onClickHandler(event.offsetX, event.offsetY, event.button);
+    });
 
     document.querySelector("#buildHouseButton").addEventListener("click", (event) => {
         placeBuildingType = BuildingType.houseType;
